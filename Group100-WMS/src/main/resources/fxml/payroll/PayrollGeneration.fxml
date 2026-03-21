@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.payroll.PayrollGenerationController"
+      spacing="12">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Payroll Generation" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="Month:"/>
+        <ComboBox fx:id="monthCombo" prefWidth="80"/>
+        <Label text="Year:"/>
+        <ComboBox fx:id="yearCombo" prefWidth="90"/>
+        <Button text="Generate" onAction="#handleGenerate"
+                style="-fx-background-color: #2980b9; -fx-text-fill: white;"/>
+        <Button text="Load Existing" onAction="#handleLoad"/>
+    </HBox>
+    <TableView fx:id="payrollTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colEmpId"  text="Emp ID"     prefWidth="80"/>
+            <TableColumn fx:id="colBasic"  text="Basic"      prefWidth="110"/>
+            <TableColumn fx:id="colOT"     text="OT Pay"     prefWidth="110"/>
+            <TableColumn fx:id="colEpf"    text="EPF (Emp)"  prefWidth="110"/>
+            <TableColumn fx:id="colNet"    text="Net Salary" prefWidth="120"/>
+            <TableColumn fx:id="colStatus" text="Status"     prefWidth="100"/>
+        </columns>
+    </TableView>
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

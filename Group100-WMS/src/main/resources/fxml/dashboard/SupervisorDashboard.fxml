@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.dashboard.SupervisorDashboardController"
+      spacing="20">
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+    <Label text="Supervisor Dashboard" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+    <HBox spacing="16">
+        <VBox styleClass="kpi-card" spacing="8" prefWidth="180">
+            <Label text="Total Items" style="-fx-text-fill: #7f8c8d;"/>
+            <Label fx:id="totalItemsLabel" text="—" style="-fx-font-size: 28; -fx-font-weight: bold;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="8" prefWidth="180">
+            <Label text="Low Stock" style="-fx-text-fill: #e74c3c;"/>
+            <Label fx:id="lowStockLabel" text="—" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+        </VBox>
+    </HBox>
+    <Button text="Refresh" onAction="#handleRefresh"/>
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

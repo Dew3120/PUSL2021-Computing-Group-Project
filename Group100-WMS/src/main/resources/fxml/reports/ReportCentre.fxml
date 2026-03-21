@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="content-pane"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.reports.ReportCentreController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Reports Centre — Employee Report" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Total Workers" styleClass="kpi-title"/>
+            <Label fx:id="lblTotal" text="--" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Active" styleClass="kpi-title"/>
+            <Label fx:id="lblActive" text="--" styleClass="kpi-value" style="-fx-text-fill: #27ae60;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Resigned" styleClass="kpi-title"/>
+            <Label fx:id="lblResigned" text="--" styleClass="kpi-value" style="-fx-text-fill: #e74c3c;"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Section:"/>
+        <ComboBox fx:id="cmbSection" prefWidth="120"/>
+        <Label text="Status:"/>
+        <ComboBox fx:id="cmbActiveFilter" prefWidth="120"/>
+        <Button text="🔍 Filter" onAction="#handleFilter"/>
+        <Button text="↻ Reset" onAction="#handleReset"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📥 PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
+        <Button text="📥 Excel" onAction="#handleExportExcel" styleClass="btn-success"/>
+    </HBox>
+
+    <TableView fx:id="empTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="40"/>
+            <TableColumn fx:id="colName" text="Full Name" prefWidth="170"/>
+            <TableColumn fx:id="colDesig" text="Designation" prefWidth="130"/>
+            <TableColumn fx:id="colSection" text="Section" prefWidth="65"/>
+            <TableColumn fx:id="colRate" text="Daily Rate" prefWidth="80"/>
+            <TableColumn fx:id="colBank" text="Bank" prefWidth="120"/>
+            <TableColumn fx:id="colBankAcc" text="Account No" prefWidth="110"/>
+            <TableColumn fx:id="colNic" text="NIC" prefWidth="110"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
+        </columns>
+    </TableView>
+</VBox>

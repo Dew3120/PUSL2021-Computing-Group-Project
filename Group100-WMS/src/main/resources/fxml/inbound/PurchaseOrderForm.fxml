@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.inbound.PurchaseOrderFormController"
+      spacing="14" maxWidth="500">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="New Purchase Order" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <Label text="Supplier"/>
+    <ComboBox fx:id="supplierCombo" maxWidth="Infinity"/>
+    <Label text="Expected Delivery Date"/>
+    <DatePicker fx:id="expectedDeliveryDate" maxWidth="Infinity"/>
+    <Label text="Notes"/>
+    <TextArea fx:id="notesArea" prefHeight="80"/>
+    <HBox spacing="8">
+        <Button text="Save" onAction="#handleSave"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+        <Button text="Clear" onAction="#handleClear"/>
+    </HBox>
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

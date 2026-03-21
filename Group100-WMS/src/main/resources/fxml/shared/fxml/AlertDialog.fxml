@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.shared.controllers.AlertDialogController"
+      spacing="20" alignment="CENTER" prefWidth="350">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+    <Label fx:id="messageLabel" text="" wrapText="true" maxWidth="300"/>
+    <Button text="OK" onAction="#handleOk" prefWidth="80"/>
+</VBox>

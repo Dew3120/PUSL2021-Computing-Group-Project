@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="content-pane"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.inbound.PurchaseOrderListController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="📥 Inbound — Purchase Orders" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Total POs" styleClass="kpi-title"/>
+            <Label fx:id="lblTotalPo" text="--" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Received" styleClass="kpi-title"/>
+            <Label fx:id="lblReceived" text="--" styleClass="kpi-value" style="-fx-text-fill: #27ae60;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Pending" styleClass="kpi-title"/>
+            <Label fx:id="lblPending" text="--" styleClass="kpi-value" style="-fx-text-fill: #f39c12;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Cancelled" styleClass="kpi-title"/>
+            <Label fx:id="lblCancelled" text="--" styleClass="kpi-value" style="-fx-text-fill: #e74c3c;"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Status:"/>
+        <ComboBox fx:id="cmbStatus" prefWidth="180"/>
+        <Label text="Supplier:"/>
+        <ComboBox fx:id="cmbSupplier" prefWidth="200"/>
+        <Button text="🔍 Filter" onAction="#handleFilter"/>
+        <Button text="↻ Reset" onAction="#handleReset"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📥 Export PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
+        <Button text="📥 Export Excel" onAction="#handleExportExcel" styleClass="btn-success"/>
+    </HBox>
+
+    <TableView fx:id="poTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colPoId" text="PO #" prefWidth="60"/>
+            <TableColumn fx:id="colSupplier" text="Supplier" prefWidth="200"/>
+            <TableColumn fx:id="colWarehouse" text="Warehouse" prefWidth="140"/>
+            <TableColumn fx:id="colOrderDate" text="Order Date" prefWidth="110"/>
+            <TableColumn fx:id="colExpDate" text="Expected" prefWidth="110"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="150"/>
+        </columns>
+    </TableView>
+</VBox>

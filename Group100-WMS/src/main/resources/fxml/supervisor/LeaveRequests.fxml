@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.group100.wms.ui.supervisor.LeaveRequestController"
+      styleClass="content-pane" spacing="16">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="Leave and Half-Day Requests" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Refresh"      styleClass="btn-primary" onAction="#onRefresh"/>
+        <Button text="Export PDF"   styleClass="btn-primary" onAction="#onExportPdf"/>
+        <Button text="Export Excel" styleClass="btn-success" onAction="#onExportExcel"/>
+    </HBox>
+    <HBox spacing="14">
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Total" styleClass="kpi-title"/>
+            <Label fx:id="lblTotalRequests" text="0" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Pending" styleClass="kpi-title"/>
+            <Label fx:id="lblPendingCount" text="0" styleClass="kpi-value" style="-fx-text-fill:#f39c12;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Approved" styleClass="kpi-title"/>
+            <Label fx:id="lblApprovedCount" text="0" styleClass="kpi-value" style="-fx-text-fill:#27ae60;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Rejected" styleClass="kpi-title"/>
+            <Label fx:id="lblRejectedCount" text="0" styleClass="kpi-value" style="-fx-text-fill:#e74c3c;"/>
+        </VBox>
+    </HBox>
+    <SplitPane dividerPositions="0.68" VBox.vgrow="ALWAYS">
+        <VBox spacing="10">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Filter:" style="-fx-font-weight:bold;"/>
+                <ComboBox fx:id="cmbStatusFilter"  prefWidth="130"/>
+                <ComboBox fx:id="cmbSectionFilter" prefWidth="150"/>
+            </HBox>
+            <TableView fx:id="tblRequests" VBox.vgrow="ALWAYS" styleClass="table-view">
+                <columns>
+                    <TableColumn fx:id="colReqId"    text="#"         prefWidth="45"/>
+                    <TableColumn fx:id="colEmpName"  text="Employee"  prefWidth="160"/>
+                    <TableColumn fx:id="colSection"  text="Section"   prefWidth="80"/>
+                    <TableColumn fx:id="colDate"     text="Date"      prefWidth="95"/>
+                    <TableColumn fx:id="colType"     text="Type"      prefWidth="90"/>
+                    <TableColumn fx:id="colReason"   text="Reason"    prefWidth="200"/>
+                    <TableColumn fx:id="colStatus"   text="Status"    prefWidth="90"/>
+                    <TableColumn fx:id="colCreatedAt" text="Submitted" prefWidth="110"/>
+                    <TableColumn fx:id="colActions"  text="Actions"   prefWidth="160"/>
+                </columns>
+                <placeholder><Label text="No leave requests found."/></placeholder>
+            </TableView>
+        </VBox>
+        <VBox spacing="14" style="-fx-background-color:#f8f9fa;-fx-padding:16;-fx-background-radius:8;">
+            <Label text="New Request" style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#2c3e50;"/>
+            <Label text="Employee:" style="-fx-font-weight:bold;"/>
+            <HBox spacing="6">
+                <TextField fx:id="txtEmpSearch" promptText="Type name to filter..." prefWidth="160" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cmbEmpSection" prefWidth="110"/>
+            </HBox>
+            <ComboBox fx:id="cmbEmployee" maxWidth="Infinity" visibleRowCount="8"/>
+            <Label text="Request Date:" style="-fx-font-weight:bold;"/>
+            <DatePicker fx:id="dpRequestDate" maxWidth="Infinity"/>
+            <Label text="Leave Type:" style="-fx-font-weight:bold;"/>
+            <ComboBox fx:id="cmbLeaveType" maxWidth="Infinity"/>
+            <Label text="Reason:" style="-fx-font-weight:bold;"/>
+            <TextArea fx:id="txtReason" promptText="Enter reason..." prefHeight="90" wrapText="true"/>
+            <Button text="Submit Request" styleClass="btn-success" maxWidth="Infinity" onAction="#onSubmitRequest"/>
+            <Separator/>
+            <Label text="Approved requests automatically update the attendance record for that date."
+                   style="-fx-text-fill:#7f8c8d;-fx-font-size:11px;" wrapText="true"/>
+        </VBox>
+    </SplitPane>
+</VBox>

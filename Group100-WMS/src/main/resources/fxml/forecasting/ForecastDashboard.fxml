@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="content-pane"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.forecasting.ForecastDashboardController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="AI Demand Forecasting" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+    <HBox spacing="15" alignment="CENTER_LEFT" fx:id="kpiRow">
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="180">
+            <Label text="Avg Accuracy" styleClass="kpi-title"/>
+            <Label fx:id="lblAvgAccuracy" text="--%" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="180">
+            <Label text="HIT" styleClass="kpi-title"/>
+            <Label fx:id="lblHitCount" text="--" styleClass="kpi-value" style="-fx-text-fill: #27ae60;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="180">
+            <Label text="FAIR" styleClass="kpi-title"/>
+            <Label fx:id="lblFairCount" text="--" styleClass="kpi-value" style="-fx-text-fill: #f39c12;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="180">
+            <Label text="MISS" styleClass="kpi-title"/>
+            <Label fx:id="lblMissCount" text="--" styleClass="kpi-value" style="-fx-text-fill: #e74c3c;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="180">
+            <Label text="Total Forecasts" styleClass="kpi-title"/>
+            <Label fx:id="lblTotalForecasts" text="--" styleClass="kpi-value"/>
+        </VBox>
+    </HBox>
+
+    <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+
+        <Tab text="Current Forecasts">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <TableView fx:id="currentTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colCurItem" text="Item" prefWidth="200"/>
+                        <TableColumn fx:id="colCurWarehouse" text="Warehouse" prefWidth="140"/>
+                        <TableColumn fx:id="colCurPredicted" text="Predicted Qty" prefWidth="120"/>
+                        <TableColumn fx:id="colCurConfidence" text="Confidence" prefWidth="100"/>
+                        <TableColumn fx:id="colCurMethod" text="Method" prefWidth="100"/>
+                        <TableColumn fx:id="colCurDate" text="Generated" prefWidth="120"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <Tab text="Forecast History">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Filter by Result:"/>
+                    <ComboBox fx:id="cmbResultFilter" prefWidth="150"/>
+                    <Label text="Month/Year:"/>
+                    <ComboBox fx:id="cmbMonthFilter" prefWidth="100"/>
+                    <ComboBox fx:id="cmbYearFilter" prefWidth="100"/>
+                    <Button text="Filter" onAction="#handleHistoryFilter"/>
+                    <Button text="Reset" onAction="#handleHistoryReset"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Export PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
+                    <Button text="Export Excel" onAction="#handleExportExcel" styleClass="btn-success"/>
+                </HBox>
+                <TableView fx:id="historyTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colHistItem" text="Item" prefWidth="180"/>
+                        <TableColumn fx:id="colHistMonth" text="Month" prefWidth="80"/>
+                        <TableColumn fx:id="colHistYear" text="Year" prefWidth="70"/>
+                        <TableColumn fx:id="colHistPredicted" text="Predicted" prefWidth="100"/>
+                        <TableColumn fx:id="colHistActual" text="Actual" prefWidth="100"/>
+                        <TableColumn fx:id="colHistAccuracy" text="Accuracy %" prefWidth="100"/>
+                        <TableColumn fx:id="colHistResult" text="Result" prefWidth="80"/>
+                        <TableColumn fx:id="colHistConfidence" text="Confidence" prefWidth="90"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <Tab text="Trends">
+            <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Year:" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cmbTrendYear" prefWidth="100"/>
+                    <Label text="Month:" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cmbTrendMonth" prefWidth="150"/>
+                    <Button text="Show" onAction="#handleTrendFilter" styleClass="btn-primary"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="lblChartTitle" text="Annual" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                </HBox>
+                <LineChart fx:id="trendChart" VBox.vgrow="ALWAYS" animated="false" createSymbols="true">
+                    <xAxis><CategoryAxis fx:id="xAxis" label="Item"/></xAxis>
+                    <yAxis><NumberAxis fx:id="yAxis" label="Quantity"/></yAxis>
+                </LineChart>
+                <TableView fx:id="trendTable" prefHeight="180">
+                    <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+                    <columns>
+                        <TableColumn fx:id="colTrendPeriod" text="Period" minWidth="100"/>
+                        <TableColumn fx:id="colTrendTotal" text="Total" minWidth="70"/>
+                        <TableColumn fx:id="colTrendHits" text="HITs" minWidth="70"/>
+                        <TableColumn fx:id="colTrendFairs" text="FAIRs" minWidth="70"/>
+                        <TableColumn fx:id="colTrendMisses" text="MISSes" minWidth="80"/>
+                        <TableColumn fx:id="colTrendAvgAcc" text="Avg Accuracy %" minWidth="120"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

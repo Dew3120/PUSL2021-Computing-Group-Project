@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.inventory.LowStockAlertController"
+      spacing="12">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Low Stock Alerts" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <Button text="Refresh" onAction="#handleRefresh" prefWidth="100"/>
+
+    <TableView fx:id="alertTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colCode"     text="Code"     prefWidth="120"/>
+            <TableColumn fx:id="colName"     text="Name"     prefWidth="250"/>
+            <TableColumn fx:id="colCategory" text="Category" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

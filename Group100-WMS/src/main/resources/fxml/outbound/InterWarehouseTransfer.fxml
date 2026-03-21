@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.outbound.InterWarehouseTransferController"
+      spacing="14" maxWidth="500">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Inter-Warehouse Transfer" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <Label text="From Warehouse"/>
+    <ComboBox fx:id="fromWarehouseCombo" maxWidth="Infinity"/>
+    <Label text="To Warehouse"/>
+    <ComboBox fx:id="toWarehouseCombo" maxWidth="Infinity"/>
+    <Label text="Item"/>
+    <ComboBox fx:id="itemCombo" maxWidth="Infinity"/>
+    <Label text="Quantity"/>
+    <TextField fx:id="quantityField" promptText="Enter quantity"/>
+    <HBox spacing="8">
+        <Button text="Transfer" onAction="#handleTransfer"
+                style="-fx-background-color: #8e44ad; -fx-text-fill: white;"/>
+        <Button text="Clear" onAction="#handleClear"/>
+    </HBox>
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

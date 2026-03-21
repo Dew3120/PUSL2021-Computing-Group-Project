@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="content-pane"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.outbound.GinListController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="📤 Outbound — Goods Issue Notes" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Total GINs" styleClass="kpi-title"/>
+            <Label fx:id="lblTotal" text="--" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Completed" styleClass="kpi-title"/>
+            <Label fx:id="lblCompleted" text="--" styleClass="kpi-value" style="-fx-text-fill: #27ae60;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="In Transit" styleClass="kpi-title"/>
+            <Label fx:id="lblTransit" text="--" styleClass="kpi-value" style="-fx-text-fill: #3498db;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Cancelled" styleClass="kpi-title"/>
+            <Label fx:id="lblCancelled" text="--" styleClass="kpi-value" style="-fx-text-fill: #e74c3c;"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Status:"/>
+        <ComboBox fx:id="cmbStatus" prefWidth="160"/>
+        <Label text="Destination:"/>
+        <ComboBox fx:id="cmbDest" prefWidth="200"/>
+        <Button text="🔍 Filter" onAction="#handleFilter"/>
+        <Button text="↻ Reset" onAction="#handleReset"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📥 Export PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
+        <Button text="📥 Export Excel" onAction="#handleExportExcel" styleClass="btn-success"/>
+    </HBox>
+
+    <TableView fx:id="ginTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colGinId" text="GIN #" prefWidth="60"/>
+            <TableColumn fx:id="colWarehouse" text="Warehouse" prefWidth="140"/>
+            <TableColumn fx:id="colDest" text="Destination" prefWidth="180"/>
+            <TableColumn fx:id="colDestType" text="Type" prefWidth="120"/>
+            <TableColumn fx:id="colDate" text="Issued Date" prefWidth="110"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="130"/>
+        </columns>
+    </TableView>
+</VBox>

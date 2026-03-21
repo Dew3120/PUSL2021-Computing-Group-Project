@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.shared.controllers.ErrorDialogController"
+      spacing="16" prefWidth="400">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+    <Label fx:id="messageLabel" text="" wrapText="true"
+           style="-fx-text-fill: #e74c3c; -fx-font-weight: bold;"/>
+    <TextArea fx:id="detailArea" editable="false" prefHeight="100" wrapText="true"/>
+    <Button text="Close" onAction="#handleClose" prefWidth="80"/>
+</VBox>

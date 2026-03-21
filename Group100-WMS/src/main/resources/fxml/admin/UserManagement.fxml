@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="content-pane"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.admin.UserManagementController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="User Management" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Total Users" styleClass="kpi-title"/>
+            <Label fx:id="lblTotalUsers" text="--" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
+            <Label text="Active" styleClass="kpi-title"/>
+            <Label fx:id="lblActive" text="--" styleClass="kpi-value" style="-fx-text-fill: #27ae60;"/>
+        </VBox>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+        <FlowPane fx:id="userCardsPane" hgap="20" vgap="20">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+        </FlowPane>
+    </ScrollPane>
+</VBox>

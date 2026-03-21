@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.admin.SystemConfigController"
+      spacing="16" maxWidth="500">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="System Configuration" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="20" vgap="10">
+        <Label text="Application Name:"  GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="appNameLabel"      GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Version:"           GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="appVersionLabel"   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Database Host:"     GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="dbHostLabel"       GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Database Name:"     GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="dbNameLabel"       GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Session Timeout:"   GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="sessionTimeoutLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Low Stock Threshold:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="lowStockLabel"     GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+        <Label text="EPF Employee Rate:" GridPane.rowIndex="6" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="epfEmployeeLabel"  GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+        <Label text="EPF Employer Rate:" GridPane.rowIndex="7" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="epfEmployerLabel"  GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+        <Label text="ETF Rate:"          GridPane.rowIndex="8" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="etfLabel"          GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+        <Label text="Overtime Rate:"     GridPane.rowIndex="9" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <Label fx:id="overtimeLabel"     GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+    </GridPane>
+</VBox>

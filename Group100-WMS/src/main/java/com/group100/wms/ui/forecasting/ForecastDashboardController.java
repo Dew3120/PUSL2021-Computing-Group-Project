@@ -1,0 +1,360 @@
+package com.group100.wms.ui.forecasting;
+
+import com.group100.wms.core.DatabaseConnection;
+import com.group100.wms.model.Forecast;
+import com.group100.wms.model.ForecastHistory;
+import com.group100.wms.repository.ForecastHistoryRepository;
+import com.group100.wms.util.PdfExporter;
+import com.group100.wms.util.ExcelExporter;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
+
+import java.sql.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class ForecastDashboardController {
+
+    @FXML private Label lblAvgAccuracy, lblHitCount, lblFairCount, lblMissCount, lblTotalForecasts;
+
+    @FXML private TableView<Forecast> currentTable;
+    @FXML private TableColumn<Forecast, String> colCurItem, colCurWarehouse, colCurMethod;
+    @FXML private TableColumn<Forecast, Number> colCurPredicted, colCurConfidence;
+    @FXML private TableColumn<Forecast, String> colCurDate;
+
+    @FXML private TableView<ForecastHistory> historyTable;
+    @FXML private TableColumn<ForecastHistory, String> colHistItem, colHistResult;
+    @FXML private TableColumn<ForecastHistory, Number> colHistMonth, colHistYear, colHistPredicted, colHistActual, colHistAccuracy, colHistConfidence;
+    @FXML private ComboBox<String> cmbResultFilter, cmbMonthFilter, cmbYearFilter;
+
+    @FXML private LineChart<String, Number> trendChart;
+    @FXML private CategoryAxis xAxis;
+    @FXML private NumberAxis yAxis;
+    @FXML private ComboBox<String> cmbTrendYear, cmbTrendMonth;
+    @FXML private Label lblChartTitle;
+    @FXML private TableView<TrendRow> trendTable;
+    @FXML private TableColumn<TrendRow, String> colTrendPeriod;
+    @FXML private TableColumn<TrendRow, Number> colTrendTotal, colTrendHits, colTrendFairs, colTrendMisses, colTrendAvgAcc;
+
+    private final ForecastHistoryRepository histRepo = new ForecastHistoryRepository();
+    private ObservableList<ForecastHistory> allHistory;
+
+    @FXML
+    public void initialize() {
+        setupCurrentTab();
+        setupHistoryTab();
+        setupTrendTab();
+        loadKPIs();
+        loadCurrentForecasts();
+        loadHistory();
+        loadTrendChart("2025", "Full Year");
+        loadTrendTable();
+    }
+
+    private void loadKPIs() {
+        int hits = histRepo.countByResult("HIT");
+        int fairs = histRepo.countByResult("FAIR");
+        int misses = histRepo.countByResult("MISS");
+        double avgAcc = histRepo.averageAccuracy();
+        int total = hits + fairs + misses;
+        lblAvgAccuracy.setText(String.format("%.1f%%", avgAcc));
+        lblHitCount.setText(String.valueOf(hits));
+        lblFairCount.setText(String.valueOf(fairs));
+        lblMissCount.setText(String.valueOf(misses));
+        lblTotalForecasts.setText(String.valueOf(total));
+    }
+
+    // ========== Tab 1: Current ==========
+    private void setupCurrentTab() {
+        colCurItem.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getItemName()));
+        colCurWarehouse.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getWarehouseName()));
+        colCurPredicted.setCellValueFactory(cd -> new SimpleDoubleProperty(cd.getValue().getPredictedQty()));
+        colCurConfidence.setCellValueFactory(cd -> new SimpleDoubleProperty(cd.getValue().getConfidence()));
+        colCurMethod.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getMethod()));
+        colCurDate.setCellValueFactory(cd -> new SimpleStringProperty(
+                cd.getValue().getGeneratedDate() != null ? cd.getValue().getGeneratedDate().toString() : ""));
+    }
+
+    private void loadCurrentForecasts() {
+        ObservableList<Forecast> list = FXCollections.observableArrayList();
+        String sql = "SELECT f.*, i.name AS item_name, w.name AS warehouse_name " +
+                "FROM forecasts f JOIN items i ON f.item_id = i.item_id " +
+                "JOIN warehouses w ON f.warehouse_id = w.warehouse_id ORDER BY f.generated_date DESC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Forecast f = new Forecast();
+                f.setForecastId(rs.getInt("forecast_id"));
+                f.setItemId(rs.getInt("item_id"));
+                f.setWarehouseId(rs.getInt("warehouse_id"));
+                f.setPredictedQty(rs.getDouble("predicted_qty"));
+                f.setConfidence(rs.getDouble("confidence"));
+                java.sql.Date d = rs.getDate("generated_date");
+                if (d != null) f.setGeneratedDate(d.toLocalDate());
+                f.setMethod(rs.getString("method"));
+                f.setItemName(rs.getString("item_name"));
+                f.setWarehouseName(rs.getString("warehouse_name"));
+                list.add(f);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        currentTable.setItems(list);
+    }
+
+    // ========== Tab 2: History ==========
+    private void setupHistoryTab() {
+        colHistItem.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getItemName()));
+        colHistMonth.setCellValueFactory(cd -> new SimpleIntegerProperty(cd.getValue().getForecastMonth()));
+        colHistYear.setCellValueFactory(cd -> new SimpleIntegerProperty(cd.getValue().getForecastYear()));
+        colHistPredicted.setCellValueFactory(cd -> new SimpleDoubleProperty(cd.getValue().getPredictedQty()));
+        colHistActual.setCellValueFactory(cd -> new SimpleDoubleProperty(cd.getValue().getActualQty()));
+        colHistAccuracy.setCellValueFactory(cd -> new SimpleDoubleProperty(cd.getValue().getAccuracy()));
+        colHistResult.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().getResult()));
+        colHistConfidence.setCellValueFactory(cd -> new SimpleDoubleProperty(cd.getValue().getConfidence()));
+
+        colHistResult.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); setStyle(""); return; }
+                setText(item);
+                switch (item) {
+                    case "HIT" -> setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+                    case "FAIR" -> setStyle("-fx-text-fill: #f39c12; -fx-font-weight: bold;");
+                    case "MISS" -> setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+                    default -> setStyle("");
+                }
+            }
+        });
+
+        cmbResultFilter.setItems(FXCollections.observableArrayList("All", "HIT", "FAIR", "MISS"));
+        cmbResultFilter.setValue("All");
+        cmbMonthFilter.setItems(FXCollections.observableArrayList(
+                "All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"));
+        cmbMonthFilter.setValue("All");
+        cmbYearFilter.setItems(FXCollections.observableArrayList("All", "2025", "2026"));
+        cmbYearFilter.setValue("All");
+    }
+
+    private void loadHistory() {
+        allHistory = FXCollections.observableArrayList(histRepo.findAll());
+        historyTable.setItems(allHistory);
+    }
+
+    @FXML
+    private void handleHistoryFilter() {
+        String result = cmbResultFilter.getValue();
+        String monthStr = cmbMonthFilter.getValue();
+        String yearStr = cmbYearFilter.getValue();
+        List<ForecastHistory> filtered = allHistory.stream()
+                .filter(fh -> "All".equals(result) || fh.getResult().equals(result))
+                .filter(fh -> "All".equals(monthStr) || fh.getForecastMonth() == Integer.parseInt(monthStr))
+                .filter(fh -> "All".equals(yearStr) || fh.getForecastYear() == Integer.parseInt(yearStr))
+                .collect(Collectors.toList());
+        historyTable.setItems(FXCollections.observableArrayList(filtered));
+    }
+
+    @FXML
+    private void handleHistoryReset() {
+        cmbResultFilter.setValue("All");
+        cmbMonthFilter.setValue("All");
+        cmbYearFilter.setValue("All");
+        historyTable.setItems(allHistory);
+    }
+
+    @FXML
+    private void handleExportPdf() {
+        String[] headers = {"Item", "Month", "Year", "Predicted", "Actual", "Accuracy %", "Result"};
+        List<String[]> data = new ArrayList<>();
+        for (ForecastHistory fh : historyTable.getItems()) {
+            data.add(new String[]{fh.getItemName(), String.valueOf(fh.getForecastMonth()),
+                    String.valueOf(fh.getForecastYear()), String.format("%.0f", fh.getPredictedQty()),
+                    String.format("%.0f", fh.getActualQty()), String.format("%.1f", fh.getAccuracy()),
+                    fh.getResult()});
+        }
+        PdfExporter.export("Forecast History Report", headers, data, historyTable.getScene().getWindow());
+    }
+
+    @FXML
+    private void handleExportExcel() {
+        String[] headers = {"Item", "Month", "Year", "Predicted", "Actual", "Accuracy %", "Result", "Confidence"};
+        List<String[]> data = new ArrayList<>();
+        for (ForecastHistory fh : historyTable.getItems()) {
+            data.add(new String[]{fh.getItemName(), String.valueOf(fh.getForecastMonth()),
+                    String.valueOf(fh.getForecastYear()), String.format("%.0f", fh.getPredictedQty()),
+                    String.format("%.0f", fh.getActualQty()), String.format("%.1f", fh.getAccuracy()),
+                    fh.getResult(), String.format("%.4f", fh.getConfidence())});
+        }
+        ExcelExporter.export("Forecast History", headers, data, historyTable.getScene().getWindow());
+    }
+
+    // ========== Tab 3: Trends with LineChart ==========
+    private void setupTrendTab() {
+        colTrendPeriod.setCellValueFactory(cd -> new SimpleStringProperty(cd.getValue().period));
+        colTrendTotal.setCellValueFactory(cd -> new SimpleIntegerProperty(cd.getValue().total));
+        colTrendHits.setCellValueFactory(cd -> new SimpleIntegerProperty(cd.getValue().hits));
+        colTrendFairs.setCellValueFactory(cd -> new SimpleIntegerProperty(cd.getValue().fairs));
+        colTrendMisses.setCellValueFactory(cd -> new SimpleIntegerProperty(cd.getValue().misses));
+        colTrendAvgAcc.setCellValueFactory(cd -> new SimpleDoubleProperty(cd.getValue().avgAccuracy));
+
+        cmbTrendYear.setItems(FXCollections.observableArrayList("2025", "2026"));
+        cmbTrendYear.setValue("2025");
+        cmbTrendMonth.setItems(FXCollections.observableArrayList(
+                "Full Year", "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"));
+        cmbTrendMonth.setValue("Full Year");
+    }
+
+    @FXML
+    private void handleTrendFilter() {
+        String year = cmbTrendYear.getValue();
+        String month = cmbTrendMonth.getValue();
+        loadTrendChart(year, month);
+    }
+
+    private void loadTrendChart(String year, String monthName) {
+        trendChart.getData().clear();
+        boolean fullYear = "Full Year".equals(monthName);
+
+        String title;
+        String sql;
+
+        if (fullYear) {
+            title = "Full Year " + year + " — Predicted vs Actual per Month";
+            sql = "SELECT fh.forecast_month, " +
+                    "SUM(fh.predicted_qty) AS total_predicted, " +
+                    "SUM(fh.actual_qty) AS total_actual, " +
+                    "AVG(fh.accuracy) AS avg_accuracy " +
+                    "FROM forecast_history fh WHERE fh.forecast_year = " + year + " " +
+                    "GROUP BY fh.forecast_month ORDER BY fh.forecast_month";
+
+            XYChart.Series<String, Number> predictedSeries = new XYChart.Series<>();
+            predictedSeries.setName("Predicted");
+            XYChart.Series<String, Number> actualSeries = new XYChart.Series<>();
+            actualSeries.setName("Actual");
+            XYChart.Series<String, Number> accuracySeries = new XYChart.Series<>();
+            accuracySeries.setName("Accuracy %");
+
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                String[] monthNames = {"", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+                while (rs.next()) {
+                    int m = rs.getInt("forecast_month");
+                    String label = monthNames[m];
+                    predictedSeries.getData().add(new XYChart.Data<>(label, rs.getDouble("total_predicted")));
+                    actualSeries.getData().add(new XYChart.Data<>(label, rs.getDouble("total_actual")));
+                    accuracySeries.getData().add(new XYChart.Data<>(label, rs.getDouble("avg_accuracy") * 100));
+                }
+            } catch (SQLException e) { e.printStackTrace(); }
+
+            xAxis.setLabel("Month");
+            yAxis.setLabel("Quantity");
+            trendChart.getData().addAll(predictedSeries, actualSeries, accuracySeries);
+
+        } else {
+            int monthNum = getMonthNumber(monthName);
+            title = monthName + " " + year + " — Per Item: Predicted vs Actual";
+            sql = "SELECT fh.*, i.name AS item_name FROM forecast_history fh " +
+                    "JOIN items i ON fh.item_id = i.item_id " +
+                    "WHERE fh.forecast_year = " + year + " AND fh.forecast_month = " + monthNum + " " +
+                    "ORDER BY i.name";
+
+            XYChart.Series<String, Number> predictedSeries = new XYChart.Series<>();
+            predictedSeries.setName("Predicted");
+            XYChart.Series<String, Number> actualSeries = new XYChart.Series<>();
+            actualSeries.setName("Actual");
+            XYChart.Series<String, Number> accuracySeries = new XYChart.Series<>();
+            accuracySeries.setName("Accuracy %");
+
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String itemName = rs.getString("item_name");
+                    if (itemName.length() > 15) itemName = itemName.substring(0, 15) + "..";
+                    predictedSeries.getData().add(new XYChart.Data<>(itemName, rs.getDouble("predicted_qty")));
+                    actualSeries.getData().add(new XYChart.Data<>(itemName, rs.getDouble("actual_qty")));
+                    accuracySeries.getData().add(new XYChart.Data<>(itemName, rs.getDouble("accuracy")));
+                }
+            } catch (SQLException e) { e.printStackTrace(); }
+
+            xAxis.setLabel("Item");
+            yAxis.setLabel("Quantity");
+            trendChart.getData().addAll(predictedSeries, actualSeries, accuracySeries);
+        }
+
+        lblChartTitle.setText(title);
+
+        // Color the lines
+        trendChart.applyCss();
+        trendChart.layout();
+        if (trendChart.getData().size() >= 3) {
+            setSeriesColor(trendChart.getData().get(0), "#3498db");
+            setSeriesColor(trendChart.getData().get(1), "#27ae60");
+            setSeriesColor(trendChart.getData().get(2), "#e74c3c");
+        }
+    }
+
+    private void setSeriesColor(XYChart.Series<String, Number> series, String color) {
+        if (series.getNode() != null) {
+            series.getNode().setStyle("-fx-stroke: " + color + "; -fx-stroke-width: 2px;");
+        }
+        for (XYChart.Data<String, Number> d : series.getData()) {
+            if (d.getNode() != null) {
+                d.getNode().setStyle("-fx-background-color: " + color + ", white; -fx-background-radius: 4px;");
+            }
+        }
+    }
+
+    private void loadTrendTable() {
+        ObservableList<TrendRow> trends = FXCollections.observableArrayList();
+        String sql = "SELECT forecast_year, forecast_month, COUNT(*) AS total, " +
+                "SUM(CASE WHEN result='HIT' THEN 1 ELSE 0 END) AS hits, " +
+                "SUM(CASE WHEN result='FAIR' THEN 1 ELSE 0 END) AS fairs, " +
+                "SUM(CASE WHEN result='MISS' THEN 1 ELSE 0 END) AS misses, " +
+                "AVG(accuracy) AS avg_acc " +
+                "FROM forecast_history GROUP BY forecast_year, forecast_month " +
+                "ORDER BY forecast_year, forecast_month";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                TrendRow row = new TrendRow();
+                row.period = rs.getInt("forecast_year") + "-" + String.format("%02d", rs.getInt("forecast_month"));
+                row.total = rs.getInt("total");
+                row.hits = rs.getInt("hits");
+                row.fairs = rs.getInt("fairs");
+                row.misses = rs.getInt("misses");
+                row.avgAccuracy = Math.round(rs.getDouble("avg_acc") * 10.0) / 10.0;
+                trends.add(row);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        trendTable.setItems(trends);
+    }
+
+    private int getMonthNumber(String name) {
+        String[] months = {"January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"};
+        for (int i = 0; i < months.length; i++) {
+            if (months[i].equals(name)) return i + 1;
+        }
+        return 1;
+    }
+
+    public static class TrendRow {
+        public String period;
+        public int total, hits, fairs, misses;
+        public double avgAccuracy;
+    }
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.inbound.GrnFormController"
+      spacing="14" maxWidth="520">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Receive Goods (GRN)" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <Label text="Purchase Order"/>
+    <ComboBox fx:id="poCombo" maxWidth="Infinity"/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <ComboBox fx:id="itemCombo" prefWidth="200"/>
+        <TextField fx:id="quantityField" promptText="Qty" prefWidth="80"/>
+        <TextField fx:id="unitCostField" promptText="Unit Cost" prefWidth="100"/>
+        <Button text="Add Item" onAction="#handleAddItem"/>
+    </HBox>
+    <ListView fx:id="itemListView" prefHeight="120"/>
+    <Label text="Notes"/>
+    <TextArea fx:id="notesArea" prefHeight="60"/>
+    <HBox spacing="8">
+        <Button text="Save GRN" onAction="#handleSave"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+        <Button text="Clear" onAction="#handleClear"/>
+    </HBox>
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

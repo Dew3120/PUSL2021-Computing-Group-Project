@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="content-pane"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.inventory.InventoryListController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="📦 Inventory Management" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+    <!-- KPI Row -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="160">
+            <Label text="Total Items" styleClass="kpi-title"/>
+            <Label fx:id="lblTotalItems" text="--" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="160">
+            <Label text="Categories" styleClass="kpi-title"/>
+            <Label fx:id="lblCategories" text="--" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="160">
+            <Label text="Warehouse 1" styleClass="kpi-title"/>
+            <Label fx:id="lblWh1" text="--" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="160">
+            <Label text="Warehouse 2" styleClass="kpi-title"/>
+            <Label fx:id="lblWh2" text="--" styleClass="kpi-value"/>
+        </VBox>
+    </HBox>
+
+    <!-- Filter Row -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Category:"/>
+        <ComboBox fx:id="cmbCategory" prefWidth="200"/>
+        <Label text="Search:"/>
+        <TextField fx:id="txtSearch" promptText="Search by name or SKU..." prefWidth="250"/>
+        <Button text="🔍 Filter" onAction="#handleFilter"/>
+        <Button text="↻ Reset" onAction="#handleReset"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📥 Export PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
+        <Button text="📥 Export Excel" onAction="#handleExportExcel" styleClass="btn-success"/>
+    </HBox>
+
+    <!-- Table -->
+    <TableView fx:id="itemTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colSku" text="SKU" prefWidth="100"/>
+            <TableColumn fx:id="colName" text="Name" prefWidth="250"/>
+            <TableColumn fx:id="colCategory" text="Category" prefWidth="140"/>
+            <TableColumn fx:id="colColour" text="Colour" prefWidth="90"/>
+            <TableColumn fx:id="colUnit" text="Unit" prefWidth="60"/>
+            <TableColumn fx:id="colWarehouse" text="Warehouse" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

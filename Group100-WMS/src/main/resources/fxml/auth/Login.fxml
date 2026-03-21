@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.group100.wms.ui.auth.LoginController"
+           prefWidth="900" prefHeight="600">
+    <!-- Background image -->
+    <ImageView fitWidth="900" fitHeight="600" preserveRatio="false">
+        <image><Image url="@/images/backgroundimage.jpg"/></image>
+    </ImageView>
+    <!-- Dark overlay -->
+    <Pane style="-fx-background-color:rgba(0,0,0,0.60);"/>
+    <!-- Top accent line -->
+    <VBox alignment="TOP_CENTER">
+        <Pane prefHeight="4" maxWidth="Infinity"
+              style="-fx-background-color:linear-gradient(to right,#6b3a2a,#c4813a);"/>
+    </VBox>
+    <!-- Bottom accent line -->
+    <VBox alignment="BOTTOM_CENTER">
+        <Pane prefHeight="4" maxWidth="Infinity"
+              style="-fx-background-color:linear-gradient(to right,#6b3a2a,#c4813a);"/>
+    </VBox>
+    <!-- Main content -->
+    <VBox alignment="CENTER" spacing="16">
+        <!-- Logo -->
+        <VBox alignment="CENTER" spacing="4">
+            <ImageView fitWidth="200" fitHeight="80" preserveRatio="true">
+                <image><Image url="@/images/logo2.jpg"/></image>
+            </ImageView>
+    
+        </VBox>
+        <!-- Login card -->
+        <VBox spacing="14" maxWidth="380"
+              style="-fx-background-color:rgba(80,40,20,0.35);
+                     -fx-background-radius:14;-fx-padding:36;
+                     -fx-border-color:#4a2a1a;-fx-border-radius:14;-fx-border-width:1;">
+            <Label text="Welcome Back"
+                   style="-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+            <Label text="Sign in to continue"
+                   style="-fx-font-size:12px;-fx-text-fill:#7f8c8d;"/>
+            <VBox spacing="6">
+                <Label text="USERNAME"
+                       style="-fx-text-fill:#a0856a;-fx-font-size:11px;-fx-font-weight:bold;"/>
+                <TextField fx:id="usernameField" promptText="Enter your username"
+                           style="-fx-background-color:#1e1a14;-fx-text-fill:white;
+                                  -fx-prompt-text-fill:#5a4a3a;-fx-background-radius:8;
+                                  -fx-padding:10;-fx-border-color:#4a2a1a;
+                                  -fx-border-radius:8;-fx-border-width:1;"/>
+            </VBox>
+            <VBox spacing="6">
+                <Label text="PASSWORD"
+                       style="-fx-text-fill:#a0856a;-fx-font-size:11px;-fx-font-weight:bold;"/>
+                <PasswordField fx:id="passwordField" promptText="Enter your password"
+                               style="-fx-background-color:#1e1a14;-fx-text-fill:white;
+                                      -fx-prompt-text-fill:#5a4a3a;-fx-background-radius:8;
+                                      -fx-padding:10;-fx-border-color:#4a2a1a;
+                                      -fx-border-radius:8;-fx-border-width:1;"/>
+            </VBox>
+            <Label fx:id="errorLabel" text=""
+                   style="-fx-text-fill:#e74c3c;-fx-font-size:12px;" wrapText="true"/>
+            <Button text="SIGN IN" onAction="#handleLogin" maxWidth="Infinity"
+                    style="-fx-background-color:linear-gradient(to right,#6b3a2a,#c4813a);
+                           -fx-text-fill:white;-fx-font-weight:bold;-fx-font-size:14px;
+                           -fx-background-radius:8;-fx-cursor:hand;-fx-padding:12;"/>
+        </VBox>
+
+    </VBox>
+</StackPane>

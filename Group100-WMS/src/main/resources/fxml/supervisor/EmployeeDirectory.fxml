@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.group100.wms.ui.supervisor.EmployeeDirectoryController"
+      styleClass="content-pane" spacing="16">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="&#x1F465;  Employee Directory" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="&#x1F504;  Refresh"      styleClass="btn-primary"  onAction="#onRefresh"/>
+        <Button text="&#x1F4C4;  Export PDF"   styleClass="btn-primary"  onAction="#onExportPdf"/>
+        <Button text="&#x1F4CA;  Export Excel" styleClass="btn-success"  onAction="#onExportExcel"/>
+    </HBox>
+    <HBox spacing="14">
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Total Workers" styleClass="kpi-title"/>
+            <Label fx:id="lblTotalWorkers" text="0" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Active" styleClass="kpi-title"/>
+            <Label fx:id="lblActiveWorkers" text="0" styleClass="kpi-value" style="-fx-text-fill:#27ae60;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Resigned" styleClass="kpi-title"/>
+            <Label fx:id="lblResignedWorkers" text="0" styleClass="kpi-value" style="-fx-text-fill:#e74c3c;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Male" styleClass="kpi-title"/>
+            <Label fx:id="lblMaleCount" text="0" styleClass="kpi-value" style="-fx-text-fill:#2980b9;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Female" styleClass="kpi-title"/>
+            <Label fx:id="lblFemaleCount" text="0" styleClass="kpi-value" style="-fx-text-fill:#8e44ad;"/>
+        </VBox>
+    </HBox>
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="&#x1F50D;" style="-fx-font-size:14px;"/>
+        <TextField fx:id="txtSearch" promptText="Search by name, NIC, phone..." prefWidth="240"/>
+        <Label text="Section:" style="-fx-font-weight:bold;"/>
+        <ComboBox fx:id="cmbSection" prefWidth="150"/>
+        <Label text="Gender:" style="-fx-font-weight:bold;"/>
+        <ComboBox fx:id="cmbGender"  prefWidth="110"/>
+        <Label text="Status:" style="-fx-font-weight:bold;"/>
+        <ComboBox fx:id="cmbStatus"  prefWidth="110"/>
+        <Button text="Clear" onAction="#onClearFilters"/>
+    </HBox>
+    <TableView fx:id="tblEmployees" VBox.vgrow="ALWAYS" styleClass="table-view">
+        <columns>
+            <TableColumn fx:id="colId"         text="ID"          prefWidth="60"/>
+            <TableColumn fx:id="colName"        text="Full Name"   prefWidth="180"/>
+            <TableColumn fx:id="colDesignation" text="Designation" prefWidth="140"/>
+            <TableColumn fx:id="colSection"     text="Section"     prefWidth="90"/>
+            <TableColumn fx:id="colGender"      text="Gender"      prefWidth="80"/>
+            <TableColumn fx:id="colAge"         text="Age"         prefWidth="55"/>
+            <TableColumn fx:id="colPhone"       text="Phone"       prefWidth="120"/>
+            <TableColumn fx:id="colBloodGroup"  text="Blood Grp"   prefWidth="80"/>
+            <TableColumn fx:id="colStatus"      text="Status"      prefWidth="90"/>
+            <TableColumn fx:id="colActions"     text="Action"      prefWidth="130"/>
+        </columns>
+        <placeholder><Label text="No employees found."/></placeholder>
+    </TableView>
+</VBox>

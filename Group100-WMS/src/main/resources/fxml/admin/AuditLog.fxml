@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.admin.AuditLogController"
+      spacing="12">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Audit Log" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="Filter (User ID or Table Name):"/>
+        <TextField fx:id="filterField" prefWidth="200" promptText="e.g. 1 or users"/>
+        <Button text="Filter" onAction="#handleFilter"/>
+        <Button text="Refresh" onAction="#handleRefresh"/>
+    </HBox>
+
+    <TableView fx:id="auditTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
+            <TableColumn fx:id="colUserId"    text="User ID"   prefWidth="70"/>
+            <TableColumn fx:id="colAction"    text="Action"    prefWidth="120"/>
+            <TableColumn fx:id="colTable"     text="Table"     prefWidth="120"/>
+            <TableColumn fx:id="colRecordId"  text="Record ID" prefWidth="80"/>
+            <TableColumn fx:id="colDetails"   text="Details"   prefWidth="250"/>
+            <TableColumn fx:id="colTimestamp" text="Timestamp"  prefWidth="180"/>
+        </columns>
+    </TableView>
+
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

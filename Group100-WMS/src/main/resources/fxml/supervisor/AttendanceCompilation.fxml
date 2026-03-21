@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.group100.wms.ui.supervisor.AttendanceCompilationController"
+      styleClass="content-pane" spacing="16">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="&#x1F4C5;  Attendance Compilation" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="&#x1F504;  Refresh" styleClass="btn-primary" onAction="#onRefresh"/>
+    </HBox>
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Section:" style="-fx-font-weight:bold;"/>
+        <ComboBox fx:id="cmbSection" prefWidth="140"/>
+        <Label text="View Date:" style="-fx-font-weight:bold;"/>
+        <DatePicker fx:id="dpDate" prefWidth="140"/>
+        <Label text="Month:" style="-fx-font-weight:bold;"/>
+        <ComboBox fx:id="cmbMonth" prefWidth="130"/>
+        <Label text="Year:" style="-fx-font-weight:bold;"/>
+        <ComboBox fx:id="cmbYear" prefWidth="100"/>
+        <Label text="Search:" style="-fx-font-weight:bold;"/>
+        <TextField fx:id="txtSearch" promptText="Search name..." prefWidth="160"/>
+    </HBox>
+    <HBox spacing="14">
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Employees (Today)" styleClass="kpi-title"/>
+            <Label fx:id="lblTotalDays" text="0" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Present" styleClass="kpi-title"/>
+            <Label fx:id="lblPresent" text="0" styleClass="kpi-value" style="-fx-text-fill:#27ae60;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Absent" styleClass="kpi-title"/>
+            <Label fx:id="lblAbsent" text="0" styleClass="kpi-value" style="-fx-text-fill:#e74c3c;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Half Day" styleClass="kpi-title"/>
+            <Label fx:id="lblHalfDay" text="0" styleClass="kpi-value" style="-fx-text-fill:#f39c12;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Attendance Rate" styleClass="kpi-title"/>
+            <Label fx:id="lblAttendanceRate" text="0%" styleClass="kpi-value" style="-fx-text-fill:#2980b9;"/>
+        </VBox>
+    </HBox>
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+        <Tab text="&#x1F4CB;  Daily Attendance">
+            <VBox spacing="10">
+                <padding><Insets top="12"/></padding>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="&#x1F4E4;  Send Today to Admin" style="-fx-background-color:#8e44ad;-fx-text-fill:white;-fx-background-radius:6;-fx-padding:6 14;-fx-font-weight:bold;" onAction="#onSendTodayToAdmin"/>
+                    <Button text="&#x1F4C4;  Export PDF" styleClass="btn-primary" onAction="#onExportDailyPdf"/>
+                </HBox>
+                <TableView fx:id="tblAttendance" VBox.vgrow="ALWAYS" styleClass="table-view">
+                    <columns>
+                        <TableColumn fx:id="colEmpId"    text="ID"            prefWidth="55"/>
+                        <TableColumn fx:id="colName"     text="Name"          prefWidth="180"/>
+                        <TableColumn fx:id="colSection"  text="Section"       prefWidth="85"/>
+                        <TableColumn fx:id="colDate"     text="Date"          prefWidth="100"/>
+                        <TableColumn fx:id="colClockIn"  text="Clock In"      prefWidth="90"/>
+                        <TableColumn fx:id="colClockOut" text="Clock Out"     prefWidth="90"/>
+                        <TableColumn fx:id="colStatus"   text="Status"        prefWidth="100"/>
+                        <TableColumn fx:id="colNotes"    text="Notes"         prefWidth="180"/>
+                        <TableColumn fx:id="colActions"  text="Change Status" prefWidth="220"/>
+                    </columns>
+                    <placeholder><Label text="No records for selected date."/></placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+        <Tab text="&#x1F4CA;  Monthly Summary">
+            <VBox spacing="10">
+                <padding><Insets top="12"/></padding>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="&#x1F4CA;  Export Excel" styleClass="btn-success" onAction="#onExportMonthlyExcel"/>
+                    <Button text="&#x1F4E4;  Submit to Admin" style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-background-radius:6;-fx-padding:6 14;-fx-font-weight:bold;" onAction="#onSubmitToAdmin"/>
+                </HBox>
+                <TableView fx:id="tblSummary" VBox.vgrow="ALWAYS" styleClass="table-view">
+                    <columns>
+                        <TableColumn fx:id="colSumName"    text="Employee"     prefWidth="200"/>
+                        <TableColumn fx:id="colSumSection" text="Section"      prefWidth="90"/>
+                        <TableColumn fx:id="colSumPresent" text="Present Days" prefWidth="110"/>
+                        <TableColumn fx:id="colSumAbsent"  text="Absent Days"  prefWidth="110"/>
+                        <TableColumn fx:id="colSumHalfDay" text="Half Days"    prefWidth="100"/>
+                        <TableColumn fx:id="colSumRate"    text="Rate %"       prefWidth="90"/>
+                    </columns>
+                    <placeholder><Label text="Select month and year to view summary."/></placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

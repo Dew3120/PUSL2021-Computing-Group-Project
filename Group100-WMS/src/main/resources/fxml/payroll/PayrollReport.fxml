@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="content-pane"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.payroll.PayrollReportController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Payroll Report" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="160">
+            <Label text="Total Records" styleClass="kpi-title"/>
+            <Label fx:id="lblTotal" text="--" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" HBox.hgrow="ALWAYS">
+            <Label text="Total Net Payout" styleClass="kpi-title"/>
+            <Label fx:id="lblNetTotal" text="--" styleClass="kpi-value" maxWidth="Infinity"/>
+        </VBox>
+        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" HBox.hgrow="ALWAYS">
+            <Label text="Total EPF (Employer)" styleClass="kpi-title"/>
+            <Label fx:id="lblEpfTotal" text="--" styleClass="kpi-value" maxWidth="Infinity"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Section:"/>
+        <ComboBox fx:id="cmbSection" prefWidth="120"/>
+        <Label text="Month:"/>
+        <ComboBox fx:id="cmbMonth" prefWidth="100"/>
+        <Label text="Year:"/>
+        <ComboBox fx:id="cmbYear" prefWidth="100"/>
+        <Button text="🔍 Filter" onAction="#handleFilter"/>
+        <Button text="↻ Reset" onAction="#handleReset"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📥 PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
+        <Button text="📥 Excel" onAction="#handleExportExcel" styleClass="btn-success"/>
+    </HBox>
+
+    <TableView fx:id="payrollTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colEmpId" text="Emp #" prefWidth="55"/>
+            <TableColumn fx:id="colName" text="Employee Name" prefWidth="180"/>
+            <TableColumn fx:id="colSection" text="Section" prefWidth="75"/>
+            <TableColumn fx:id="colMonth" text="Month" prefWidth="60"/>
+            <TableColumn fx:id="colYear" text="Year" prefWidth="55"/>
+            <TableColumn fx:id="colBase" text="Base Salary" prefWidth="100"/>
+            <TableColumn fx:id="colOT" text="Overtime" prefWidth="85"/>
+            <TableColumn fx:id="colDeductions" text="Deductions" prefWidth="90"/>
+            <TableColumn fx:id="colEpf" text="EPF Empl." prefWidth="90"/>
+            <TableColumn fx:id="colEtf" text="ETF" prefWidth="75"/>
+            <TableColumn fx:id="colNet" text="Net Salary" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

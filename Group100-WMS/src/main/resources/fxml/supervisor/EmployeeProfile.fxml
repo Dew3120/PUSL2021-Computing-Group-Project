@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.group100.wms.ui.supervisor.EmployeeProfileController"
+      prefWidth="580" prefHeight="700" spacing="0" style="-fx-background-color:#f8f9fa;">
+    <HBox style="-fx-background-color:#2c3e50;-fx-padding:20;" spacing="20" alignment="CENTER_LEFT">
+        <StackPane minWidth="68" minHeight="68" maxWidth="68" maxHeight="68"
+                   style="-fx-background-radius:50;-fx-background-color:#3498db;">
+            <Label fx:id="lblInitials" text="?" style="-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+        </StackPane>
+        <VBox spacing="4">
+            <Label fx:id="lblName"        text="-" style="-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+            <Label fx:id="lblDesignation" text="-" style="-fx-font-size:12px;-fx-text-fill:#bdc3c7;"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label fx:id="lblSection" text="-" style="-fx-background-color:#3498db;-fx-text-fill:white;-fx-padding:2 8;-fx-background-radius:10;-fx-font-size:11px;"/>
+                <Label fx:id="lblStatusBadge" text="ACTIVE"/>
+            </HBox>
+        </VBox>
+
+    </HBox>
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color:transparent;">
+        <VBox spacing="14">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            <VBox styleClass="kpi-card" spacing="8">
+                <Label text="&#x1F464;  Personal Information" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#2c3e50;"/>
+                <GridPane hgap="20" vgap="6">
+                    <Label text="Employee ID:"   GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblEmpId"       GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="Gender:"         GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblGender"      GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Age:"            GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblAge"         GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    <Label text="Date of Birth:"  GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblDob"         GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    <Label text="Marital Status:" GridPane.columnIndex="0" GridPane.rowIndex="4" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblMaritalStatus" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                    <Label text="Blood Group:"    GridPane.columnIndex="0" GridPane.rowIndex="5" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblBloodGroup"  GridPane.columnIndex="1" GridPane.rowIndex="5" style="-fx-text-fill:#c0392b;-fx-font-weight:bold;"/>
+                    <Label text="NIC:"            GridPane.columnIndex="0" GridPane.rowIndex="6" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblNic"         GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                </GridPane>
+            </VBox>
+            <VBox styleClass="kpi-card" spacing="8">
+                <Label text="&#x1F4DE;  Contact Information" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#2c3e50;"/>
+                <GridPane hgap="20" vgap="6">
+                    <Label text="Phone:"   GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblPhone" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="Email:"   GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblEmail" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Address:" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblAddress" GridPane.columnIndex="1" GridPane.rowIndex="2" wrapText="true"/>
+                    <Label text="City:"    GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblCity" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                </GridPane>
+            </VBox>
+            <VBox styleClass="kpi-card" spacing="8">
+                <Label text="&#x1F6A8;  Emergency Contact" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#e74c3c;"/>
+                <GridPane hgap="20" vgap="6">
+                    <Label text="Name:"  GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblEmergencyName"  GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="Phone:" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblEmergencyPhone" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                </GridPane>
+            </VBox>
+            <VBox styleClass="kpi-card" spacing="8">
+                <Label text="&#x1F4BC;  Employment Details" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#2c3e50;"/>
+                <GridPane hgap="20" vgap="6">
+                    <Label text="Joined Date:"     GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblJoinedDate"    GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="Daily Rate:"       GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblDailyRate"     GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-text-fill:#27ae60;"/>
+                    <Label text="Resignation Date:" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblResignationDate" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </GridPane>
+            </VBox>
+            <VBox styleClass="kpi-card" spacing="8">
+                <Label text="&#x1F3E6;  Bank Details" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#2c3e50;"/>
+                <GridPane hgap="20" vgap="6">
+                    <Label text="Bank:"       GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblBankName" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    <Label text="Branch:"      GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblBankBranch" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Account No:"  GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight:bold;"/>
+                    <Label fx:id="lblAccountNumber" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-font-family:monospace;"/>
+                </GridPane>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</VBox>

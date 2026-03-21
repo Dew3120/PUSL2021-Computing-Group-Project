@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox spacing="16" styleClass="content-pane"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.group100.wms.ui.attendance.AttendanceListController">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="&#x1F4C5;  Attendance Records" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="&#x1F504;  Refresh" styleClass="btn-primary" onAction="#handleReset"/>
+        <Button text="&#x1F4C4;  Export PDF"   styleClass="btn-primary" onAction="#handleExportPdf"/>
+        <Button text="&#x1F4CA;  Export Excel" styleClass="btn-success" onAction="#handleExportExcel"/>
+    </HBox>
+    <HBox spacing="14">
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Total Records" styleClass="kpi-title"/>
+            <Label fx:id="lblTotal" text="0" styleClass="kpi-value"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Present" styleClass="kpi-title"/>
+            <Label fx:id="lblPresent" text="0" styleClass="kpi-value" style="-fx-text-fill:#27ae60;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Absent" styleClass="kpi-title"/>
+            <Label fx:id="lblAbsent" text="0" styleClass="kpi-value" style="-fx-text-fill:#e74c3c;"/>
+        </VBox>
+        <VBox styleClass="kpi-card" HBox.hgrow="ALWAYS">
+            <Label text="Half Day" styleClass="kpi-title"/>
+            <Label fx:id="lblHalf" text="0" styleClass="kpi-value" style="-fx-text-fill:#f39c12;"/>
+        </VBox>
+    </HBox>
+    <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+        <Tab text="&#x1F4CB;  All Attendance Records">
+            <VBox spacing="10">
+                <padding><Insets top="10"/></padding>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="Section:" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="cmbSection" prefWidth="130"/>
+                    <Label text="Status:" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="cmbStatus" prefWidth="130"/>
+                    <Label text="From:" style="-fx-font-weight:bold;"/>
+                    <DatePicker fx:id="dpFrom" prefWidth="140"/>
+                    <Label text="To:" style="-fx-font-weight:bold;"/>
+                    <DatePicker fx:id="dpTo" prefWidth="140"/>
+                    <Button text="&#x1F50D;  Filter" styleClass="btn-primary" onAction="#handleFilter"/>
+                    <Button text="&#x21BA;  Reset"  onAction="#handleReset"/>
+                </HBox>
+                <TableView fx:id="attTable" VBox.vgrow="ALWAYS" styleClass="table-view">
+                    <columns>
+                        <TableColumn fx:id="colEmpId"    text="ID"        prefWidth="60"/>
+                        <TableColumn fx:id="colName"     text="Name"      prefWidth="200"/>
+                        <TableColumn fx:id="colSection"  text="Section"   prefWidth="90"/>
+                        <TableColumn fx:id="colDate"     text="Date"      prefWidth="110"/>
+                        <TableColumn fx:id="colClockIn"  text="Clock In"  prefWidth="100"/>
+                        <TableColumn fx:id="colClockOut" text="Clock Out" prefWidth="100"/>
+                        <TableColumn fx:id="colStatus"   text="Status"    prefWidth="110"/>
+                    </columns>
+                    <placeholder><Label text="No records found. Use filters to search."/></placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+        <Tab text="&#x1F4E8;  Supervisor Submissions">
+            <VBox spacing="10">
+                <padding><Insets top="10"/></padding>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="&#x2139;  Daily and monthly attendance submissions sent by Supervisor appear here."
+                           style="-fx-text-fill:#2980b9;-fx-font-size:12px;" wrapText="true"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="&#x1F504;  Refresh" styleClass="btn-primary" onAction="#loadSubmissions"/>
+                </HBox>
+                <TableView fx:id="tblSubmissions" VBox.vgrow="ALWAYS" styleClass="table-view">
+                    <columns>
+                        <TableColumn fx:id="colSubId"      text="#"           prefWidth="50"/>
+                        <TableColumn fx:id="colSubType"    text="Type"        prefWidth="160"/>
+                        <TableColumn fx:id="colSubDetails" text="Details"     prefWidth="450"/>
+                        <TableColumn fx:id="colSubTime"    text="Submitted At" prefWidth="160"/>
+                    </columns>
+                    <placeholder><Label text="No submissions yet. Supervisor has not sent any data."/></placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

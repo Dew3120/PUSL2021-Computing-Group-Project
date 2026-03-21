@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.admin.UserFormController"
+      spacing="14" maxWidth="440">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Button text="Back to User List" onAction="#handleBack"
+                style="-fx-background-color: #2c3e50; -fx-text-fill: white;"/>
+    </HBox>
+
+    <Label text="Create User" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <Label text="Username"/>
+    <TextField fx:id="usernameField" promptText="Enter username"/>
+    <Label text="Password"/>
+    <PasswordField fx:id="passwordField" promptText="Enter password"/>
+    <Label text="Role"/>
+    <ComboBox fx:id="roleCombo" maxWidth="Infinity"/>
+    <Label text="Employee ID"/>
+    <TextField fx:id="employeeIdField" promptText="Enter employee ID"/>
+    <HBox spacing="8">
+        <Button text="Save" onAction="#handleSave"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+        <Button text="Clear" onAction="#handleClear"/>
+    </HBox>
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="rootPane"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.group100.wms.ui.shared.MainLayoutController"
+            styleClass="main-layout">
+    <left>
+        <VBox fx:id="sidebarContainer" styleClass="sidebar"/>
+    </left>
+</BorderPane>

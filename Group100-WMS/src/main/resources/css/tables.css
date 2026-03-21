@@ -1,0 +1,226 @@
+/* ============================================================================
+   Group 100 — Centralized Apparel WMS
+   tables.css — TableView styling, attendance rows, table scrollbars
+   ============================================================================ */
+
+/* ── 1. TABLE BASE ── */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 0;
+}
+
+/* Column header background */
+.table-view .column-header-background {
+    -fx-background-color: #2c3e50;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.table-view .column-header-background .filler {
+    -fx-background-color: #2c3e50;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent rgba(255,255,255,0.1) transparent transparent;
+    -fx-padding: 10 12 10 12;
+    -fx-size: 40px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+
+/* ── 2. TABLE ROWS ── */
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f0f0f0 transparent;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-cell-size: 36px;
+    -fx-padding: 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f8f9fa;
+}
+
+.table-row-cell:even {
+    -fx-background-color: white;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #eef2f7;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #d6eaf8;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #2c3e50;
+}
+
+.table-row-cell:selected .label {
+    -fx-text-fill: #2c3e50;
+}
+
+.table-cell {
+    -fx-padding: 8 12 8 12;
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 12.5px;
+}
+
+
+/* ── 3. TABLE EMPTY PLACEHOLDER ── */
+.table-view .placeholder .label {
+    -fx-text-fill: #95a5a6;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+
+/* ── 4. TABLE FOCUS ── */
+.table-view:focused {
+    -fx-background-color: white;
+    -fx-border-color: #3498db;
+}
+
+
+/* ── 5. TABLE SCROLLBARS ── */
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.table-view .scroll-bar:vertical .thumb,
+.table-view .scroll-bar:horizontal .thumb {
+    -fx-background-color: #c0c7ce;
+    -fx-background-radius: 4;
+}
+
+.table-view .scroll-bar:vertical .thumb:hover,
+.table-view .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #a0a8b0;
+}
+
+.table-view .scroll-bar .increment-button,
+.table-view .scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.table-view .scroll-bar .increment-arrow,
+.table-view .scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+
+/* ── 6. ATTENDANCE COLOR-CODED ROWS ── */
+.attendance-full-day {
+    -fx-background-color: #e8f8f0;
+}
+
+.attendance-half-day {
+    -fx-background-color: #fef9e7;
+}
+
+.attendance-absent {
+    -fx-background-color: #fdedec;
+}
+
+
+/* ── 7. ATTENDANCE ACTION BUTTONS ── */
+.btn-approve {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 12 5 12;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-approve:hover {
+    -fx-background-color: #2ecc71;
+}
+
+.btn-halfday {
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 12 5 12;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-halfday:hover {
+    -fx-background-color: #f1c40f;
+}
+
+.btn-reject {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 12 5 12;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-reject:hover {
+    -fx-background-color: #ff6b6b;
+}
+
+
+/* ── 8. STATUS BADGES (for table cells) ── */
+.status-badge {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 10 3 10;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-alignment: center;
+}
+
+.status-success {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+    -fx-border-color: #c3e6cb;
+    -fx-border-width: 1;
+}
+
+.status-danger {
+    -fx-background-color: #f8d7da;
+    -fx-text-fill: #721c24;
+    -fx-border-color: #f5c6cb;
+    -fx-border-width: 1;
+}
+
+.status-warning {
+    -fx-background-color: #fff3cd;
+    -fx-text-fill: #856404;
+    -fx-border-color: #ffeeba;
+    -fx-border-width: 1;
+}
+
+.status-info {
+    -fx-background-color: #d1ecf1;
+    -fx-text-fill: #0c5460;
+    -fx-border-color: #bee5eb;
+    -fx-border-width: 1;
+}
+
+.status-neutral {
+    -fx-background-color: #e9ecef;
+    -fx-text-fill: #495057;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+}

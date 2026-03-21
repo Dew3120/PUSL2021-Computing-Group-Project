@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.shared.controllers.SessionTimeoutController"
+      spacing="20" alignment="CENTER" prefWidth="380">
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+    <Label text="Session Expiring" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+    <Label fx:id="countdownLabel" text="Session expires in 60 seconds."
+           style="-fx-text-fill: #e74c3c;"/>
+    <HBox spacing="12" alignment="CENTER">
+        <Button text="Stay Logged In" onAction="#handleStayLoggedIn"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+        <Button text="Logout" onAction="#handleLogout"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

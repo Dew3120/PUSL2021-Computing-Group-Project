@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.forecasting.ForecastDetailController"
+      spacing="14" maxWidth="520">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Forecast Detail" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <TextField fx:id="itemIdField" promptText="Item ID" prefWidth="100"/>
+        <TextField fx:id="warehouseIdField" promptText="Warehouse ID" prefWidth="120"/>
+        <Button text="Load" onAction="#handleLoad"/>
+        <Button text="Run Forecast" onAction="#handleRunForecast"
+                style="-fx-background-color: #8e44ad; -fx-text-fill: white;"/>
+    </HBox>
+    <TableView fx:id="detailTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colDate"  text="Date"     prefWidth="120"/>
+            <TableColumn fx:id="colQty"   text="Qty"      prefWidth="80"/>
+            <TableColumn fx:id="colLower" text="Lower CI" prefWidth="100"/>
+            <TableColumn fx:id="colUpper" text="Upper CI" prefWidth="100"/>
+        </columns>
+    </TableView>
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

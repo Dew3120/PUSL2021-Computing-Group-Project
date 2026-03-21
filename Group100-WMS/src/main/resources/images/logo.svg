@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60" viewBox="0 0 200 60">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2ecc71;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Box icon -->
+  <rect x="4" y="14" width="32" height="32" rx="4" fill="url(#logoGrad)"/>
+  <line x1="4" y1="26" x2="36" y2="26" stroke="white" stroke-width="2"/>
+  <line x1="20" y1="14" x2="20" y2="46" stroke="white" stroke-width="2"/>
+  <!-- Text WMS -->
+  <text x="46" y="32" font-family="Arial" font-weight="bold" font-size="22" fill="white">WMS</text>
+  <!-- 100 with gradient -->
+  <text x="46" y="50" font-family="Arial" font-weight="bold" font-size="14" fill="url(#logoGrad)">GROUP 100</text>
+</svg>

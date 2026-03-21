@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.attendance.AttendanceReportController"
+      spacing="14" maxWidth="400">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <Label text="Attendance Report" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="Month:"/>
+        <ComboBox fx:id="monthCombo" prefWidth="80"/>
+        <Label text="Year:"/>
+        <ComboBox fx:id="yearCombo" prefWidth="90"/>
+    </HBox>
+    <HBox spacing="8">
+        <Button text="Export PDF" onAction="#handleExportPdf"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        <Button text="Export Excel" onAction="#handleExportExcel"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+    </HBox>
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

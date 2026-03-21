@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.attendance.AttendanceValidationController"
+      spacing="12">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Attendance Validation (Supervisor)"
+           style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="Month:"/>
+        <ComboBox fx:id="monthCombo" prefWidth="80"/>
+        <Label text="Year:"/>
+        <ComboBox fx:id="yearCombo" prefWidth="90"/>
+        <Button text="Filter" onAction="#handleFilter"/>
+        <Button text="Refresh" onAction="#handleRefresh"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Approve PRESENT" onAction="#handleApprovePresent"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+        <Button text="Approve HALF DAY" onAction="#handleApproveHalfDay"
+                style="-fx-background-color: #f39c12; -fx-text-fill: white;"/>
+        <Button text="Mark ABSENT" onAction="#handleMarkAbsent"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+    </HBox>
+
+    <TableView fx:id="validationTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId"         text="ID"         prefWidth="50"/>
+            <TableColumn fx:id="colEmployeeId" text="Emp ID"     prefWidth="65"/>
+            <TableColumn fx:id="colName"       text="Name"       prefWidth="150"/>
+            <TableColumn fx:id="colDate"       text="Date"       prefWidth="110"/>
+            <TableColumn fx:id="colCheckIn"    text="Check In"   prefWidth="85"/>
+            <TableColumn fx:id="colCheckOut"   text="Check Out"  prefWidth="85"/>
+            <TableColumn fx:id="colHours"      text="Hours"      prefWidth="70"/>
+            <TableColumn fx:id="colStatus"     text="Status"     prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <Label fx:id="statusLabel" text=""/>
+</VBox>

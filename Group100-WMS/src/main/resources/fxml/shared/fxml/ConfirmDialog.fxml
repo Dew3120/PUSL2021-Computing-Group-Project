@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.shared.controllers.ConfirmDialogController"
+      spacing="20" alignment="CENTER" prefWidth="350">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+    <Label fx:id="messageLabel" text="" wrapText="true" maxWidth="300"/>
+    <HBox spacing="12" alignment="CENTER">
+        <Button text="Yes" onAction="#handleYes" prefWidth="80"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        <Button text="No" onAction="#handleNo" prefWidth="80"/>
+    </HBox>
+</VBox>
