@@ -5,43 +5,38 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+// OOP Concepts used in this class:
+// 1. Encapsulation: The class encapsulates the logic for displaying a specific employee's data, ensuring that the UI updates (like status badge colors) are handled internally.
+// 2. Data Transfer Object (DTO) usage: It accepts an "EmpRow" object, demonstrating how data is passed between controllers in a JavaFX application.
 public class EmployeeProfileController {
 
-    @FXML private Label lblInitials;
-    @FXML private Label lblName;
-    @FXML private Label lblDesignation;
-    @FXML private Label lblSection;
-    @FXML private Label lblStatusBadge;
-    @FXML private Label lblEmpId;
-    @FXML private Label lblGender;
-    @FXML private Label lblAge;
-    @FXML private Label lblDob;
-    @FXML private Label lblMaritalStatus;
-    @FXML private Label lblBloodGroup;
-    @FXML private Label lblNic;
-    @FXML private Label lblPhone;
-    @FXML private Label lblEmail;
-    @FXML private Label lblAddress;
-    @FXML private Label lblCity;
-    @FXML private Label lblEmergencyName;
-    @FXML private Label lblEmergencyPhone;
-    @FXML private Label lblJoinedDate;
-    @FXML private Label lblDailyRate;
-    @FXML private Label lblResignationDate;
-    @FXML private Label lblBankName;
-    @FXML private Label lblBankBranch;
-    @FXML private Label lblAccountNumber;
+    // Profile Header components
+    @FXML private Label lblInitials, lblName, lblDesignation, lblSection, lblStatusBadge;
+    
+    // Personal and Contact detail labels
+    @FXML private Label lblEmpId, lblGender, lblAge, lblDob, lblMaritalStatus, lblBloodGroup, lblNic;
+    @FXML private Label lblPhone, lblEmail, lblAddress, lblCity, lblEmergencyName, lblEmergencyPhone;
+    
+    // Employment and Financial detail labels
+    @FXML private Label lblJoinedDate, lblDailyRate, lblResignationDate;
+    @FXML private Label lblBankName, lblBankBranch, lblAccountNumber;
 
+    // Populates the entire UI with data from the selected Employee row
     public void setEmployee(EmpRow emp) {
+        // Generates initials for the profile avatar (e.g., "John Doe" -> "JD")
         lblInitials.setText(getInitials(emp.fullName));
         lblName.setText(emp.fullName);
         lblDesignation.setText(emp.designation);
         lblSection.setText(emp.section);
+        
+        // Handles conditional logic for the status badge (Green for Active, Red for Resigned)
         boolean resigned = emp.status.equals("RESIGNED");
         lblStatusBadge.setText(resigned ? "RESIGNED" : "ACTIVE");
         lblStatusBadge.setStyle(resigned
                 ? "-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-padding:3 10;-fx-background-radius:12;-fx-font-weight:bold;"
                 : "-fx-background-color:#27ae60;-fx-text-fill:white;-fx-padding:3 10;-fx-background-radius:12;-fx-font-weight:bold;");
+        
+        // Formats data for display (ID padding, Age, and Currency)
         lblEmpId.setText("EMP-" + String.format("%03d", emp.empId));
         lblGender.setText(emp.gender);
         lblAge.setText(emp.age > 0 ? emp.age + " years" : "-");
@@ -63,10 +58,12 @@ public class EmployeeProfileController {
         lblAccountNumber.setText(emp.accountNumber);
     }
 
+    // Event handler to close the modal window
     @FXML private void onClose() {
         ((Stage) lblName.getScene().getWindow()).close();
     }
 
+    // Helper logic to extract up to two initials from a full name string
     private String getInitials(String name) {
         if (name == null || name.isBlank()) return "?";
         String[] parts = name.trim().split("\\s+");
