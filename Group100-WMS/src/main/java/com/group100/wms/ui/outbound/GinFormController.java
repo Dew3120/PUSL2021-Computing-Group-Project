@@ -1,3 +1,4 @@
+```java id="k3y1mf"
 package com.group100.wms.ui.outbound;
 
 import com.group100.wms.core.SessionManager;
@@ -18,25 +19,51 @@ import javafx.scene.control.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// OOP Concepts Used:
+// Encapsulation - UI fields, lists, and methods encapsulate the form’s functionality.
+// Abstraction - Controller abstracts stock checks, GIN creation, and business logic.
+// Inheritance - JavaFX UI components inherit from base classes like TextField, ComboBox, ListView, Label.
+// Polymorphism - Alert, TableView, and service method calls demonstrate polymorphic behavior.
+
 public class GinFormController {
 
+    // TextField to input destination/issued-to information
     @FXML private TextField issuedToField;
+
+    // ComboBox to select items for the GIN
     @FXML private ComboBox<Item> itemCombo;
+
+    // TextField to input quantity for the selected item
     @FXML private TextField quantityField;
+
+    // ListView to display added items in the current GIN
     @FXML private ListView<String> itemListView;
+
+    // TextArea for additional notes (optional)
     @FXML private TextArea notesArea;
+
+    // Label for displaying status messages, warnings, or errors
     @FXML private Label statusLabel;
 
+    // Service for inventory operations like checking stock
     private final InventoryService inventoryService =
             new InventoryService(new ItemRepository(), new BatchRepository());
+
+    // Service for outbound operations such as issuing GINs
     private final OutboundService outboundService = new OutboundService(
             new GinRepository(), inventoryService);
+
+    // Repository to fetch item data
     private final ItemRepository itemRepository = new ItemRepository();
+
+    // List storing GinItem objects representing items added to the current GIN
     private final List<GinItem> ginItems = new ArrayList<>();
 
+    // Initializes the form by loading available items into the ComboBox
     @FXML
     public void initialize() { loadItems(); }
 
+    // Loads all items from the database into the itemCombo ComboBox
     private void loadItems() {
         try {
             List<Item> items = itemRepository.findAll();
@@ -46,6 +73,7 @@ public class GinFormController {
         }
     }
 
+    // Handles adding an item to the GIN, including stock check and shortage warning
     @FXML
     private void handleAddItem() {
         Item item = itemCombo.getValue();
@@ -96,6 +124,7 @@ public class GinFormController {
                         + " — available: " + available + ", requesting: " + totalNeeded);
             }
 
+            // Add item to the GIN list and display in the ListView
             GinItem ginItem = new GinItem();
             ginItem.setItemId(item.getId());
             ginItem.setQuantityIssued(qty);
@@ -111,6 +140,7 @@ public class GinFormController {
         }
     }
 
+    // Handles saving the GIN, issuing the goods via the OutboundService
     @FXML
     private void handleSave() {
         String issuedTo = issuedToField.getText().trim();
@@ -140,6 +170,7 @@ public class GinFormController {
         }
     }
 
+    // Clears all form fields, resets the ListView and status label
     @FXML
     private void handleClear() {
         issuedToField.clear();
@@ -152,3 +183,4 @@ public class GinFormController {
         statusLabel.setText("");
     }
 }
+```
