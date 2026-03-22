@@ -9,8 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository class for handling Warehouse-related database operations.
+ *
+ * OOP Concepts Used:
+ * - Encapsulation: Database access logic is contained within this class.
+ * - Abstraction: Provides simplified methods to interact with warehouse data without exposing SQL queries.
+ * - Polymorphism: Demonstrated via exception handling and method behavior.
+ * - No direct inheritance used in this class.
+ */
 public class WarehouseRepository {
 
+    // Finds a warehouse by its ID
     public Optional<Warehouse> findById(int id) throws DatabaseException {
         String sql = "SELECT * FROM WAREHOUSES WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -25,6 +35,7 @@ public class WarehouseRepository {
         return Optional.empty();
     }
 
+    // Retrieves all warehouses from the database ordered by name
     public List<Warehouse> findAll() throws DatabaseException {
         List<Warehouse> list = new ArrayList<>();
         String sql = "SELECT * FROM WAREHOUSES ORDER BY name";
@@ -38,6 +49,7 @@ public class WarehouseRepository {
         return list;
     }
 
+    // Retrieves all active warehouses from the database
     public List<Warehouse> findAllActive() throws DatabaseException {
         List<Warehouse> list = new ArrayList<>();
         String sql = "SELECT * FROM WAREHOUSES WHERE is_active = true ORDER BY name";
@@ -51,6 +63,7 @@ public class WarehouseRepository {
         return list;
     }
 
+    // Saves a new warehouse record into the database and retrieves the generated ID
     public void save(Warehouse warehouse) throws DatabaseException {
         String sql = "INSERT INTO WAREHOUSES (name, location, manager_name, is_active) "
                 + "VALUES (?, ?, ?, ?)";
@@ -68,7 +81,7 @@ public class WarehouseRepository {
             throw new DatabaseException("Failed to save warehouse", e);
         }
     }
-
+    // Updates an existing warehouse record in the database
     public void update(Warehouse warehouse) throws DatabaseException {
         String sql = "UPDATE WAREHOUSES SET name=?, location=?, manager_name=?, is_active=? WHERE id=?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -84,6 +97,7 @@ public class WarehouseRepository {
         }
     }
 
+    // Maps a database result set row to a Warehouse object
     private Warehouse mapRow(ResultSet rs) throws SQLException {
         return new Warehouse(
                 rs.getInt("id"),
