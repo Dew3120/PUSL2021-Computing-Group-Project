@@ -8,22 +8,37 @@ import javafx.scene.control.Label;
 
 import java.util.Map;
 
+// OOP Concepts Used:
+// Encapsulation - Variables and methods are grouped inside this controller class.
+// Abstraction - DashboardService hides internal business logic and data access.
+// Association - This controller uses DashboardService and JavaFX Label objects.
+
 public class SeniorManagerDashboardController {
 
+    // Label used to display total number of items
     @FXML private Label totalItemsLabel;
+
+    // Label used to display total number of GRNs
     @FXML private Label totalGrnsLabel;
+
+    // Label used to display total number of GINs
     @FXML private Label totalGinsLabel;
+
+    // Label used to display status or error messages
     @FXML private Label statusLabel;
 
+    // Service object used to retrieve dashboard KPI data
     private final DashboardService dashboardService = new DashboardService(
             new ItemRepository(), new BatchRepository(), new GrnRepository(),
             new GinRepository(), new AttendanceRepository(), new PayrollRepository());
 
+    // Automatically called when the FXML controller is loaded
     @FXML
     public void initialize() {
         loadKpis();
     }
 
+    // Loads KPI values and updates dashboard labels
     private void loadKpis() {
         try {
             Map<String, Object> kpis = dashboardService.getAdminKpis();
@@ -35,6 +50,7 @@ public class SeniorManagerDashboardController {
         }
     }
 
+    // Refresh action to reload KPI data
     @FXML
     private void handleRefresh() {
         loadKpis();
