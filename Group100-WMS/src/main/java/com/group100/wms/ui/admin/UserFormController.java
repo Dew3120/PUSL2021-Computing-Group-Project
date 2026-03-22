@@ -9,16 +9,35 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+/*
+ OOP Concepts Used:
+ - Encapsulation: Data (fields like username, password, role, etc.) and methods are bundled inside this class.
+ - Abstraction: Interaction with UserService hides complex business logic and database operations.
+ - Inheritance: This controller indirectly uses inheritance through JavaFX classes (e.g., controls like TextField, Label).
+ - Polymorphism: Exception handling (DatabaseException, UnauthorizedAccessException) demonstrates polymorphic behavior.
+*/
+
 public class UserFormController {
 
+    // TextField to input the username
     @FXML private TextField usernameField;
+
+    // PasswordField to input the user's password securely
     @FXML private PasswordField passwordField;
+
+    // ComboBox to select the user role
     @FXML private ComboBox<String> roleCombo;
+
+    // TextField to input employee ID
     @FXML private TextField employeeIdField;
+
+    // Label to display status messages (success or error)
     @FXML private Label statusLabel;
 
+    // Service layer object used to handle user-related business logic and database interaction
     private final UserService userService = new UserService(new UserRepository());
 
+    // Array storing available role names with corresponding IDs
     private static final String[] ROLE_NAMES = {
             "1 - ADMIN",
             "2 - WAREHOUSE_MANAGER",
@@ -27,12 +46,14 @@ public class UserFormController {
             "5 - SENIOR_MANAGER"
     };
 
+    // Initializes the form by populating the role dropdown and setting a default value
     @FXML
     public void initialize() {
         roleCombo.getItems().addAll(ROLE_NAMES);
         roleCombo.setValue(ROLE_NAMES[2]); // Default to Supervisor
     }
 
+    // Handles the save button action: validates input and creates a new user
     @FXML
     private void handleSave() {
         String username = usernameField.getText().trim();
@@ -62,6 +83,7 @@ public class UserFormController {
         }
     }
 
+    // Clears all input fields and resets the form to default state
     @FXML
     private void handleClear() {
         usernameField.clear();
@@ -70,6 +92,7 @@ public class UserFormController {
         employeeIdField.clear();
     }
 
+    // Handles navigation back to the User Management view
     @FXML
     private void handleBack() {
         try {
