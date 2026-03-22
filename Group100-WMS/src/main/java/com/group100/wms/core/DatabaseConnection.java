@@ -1,4 +1,4 @@
-package com.group100.wms.core;
+package com.group100.wms.core; 
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
