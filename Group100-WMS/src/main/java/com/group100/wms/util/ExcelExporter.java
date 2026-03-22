@@ -14,13 +14,27 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+// OOP Concepts Used:
+// Encapsulation - All Excel generation logic and styles are contained within this class
+// Abstraction - Complex Excel creation is simplified through methods like export(), exportPayroll(), exportAttendance()
+// Polymorphism - Methods behave differently depending on the data provided (generic, payroll, attendance)
+// Inheritance - Uses Apache POI classes (Workbook, Sheet, Cell, etc.) which extend base library classes
+
 public final class ExcelExporter {
+
+    // Private constructor to prevent instantiation (utility class)
     private ExcelExporter() {}
 
+    // RGB color for primary theme (dark blue)
     private static final byte[] COLOR_PRIMARY_RGB = {44, 62, 80};
+
+    // RGB color for muted text (gray)
     private static final byte[] COLOR_MUTED_RGB   = {108, 117, 125};
+
+    // RGB color for alternate row background
     private static final byte[] COLOR_ROW_ALT_RGB = {(byte)248, (byte)249, (byte)250};
 
+    // Formatter for date/time display in reports
     private static final DateTimeFormatter DT_FMT =
             DateTimeFormatter.ofPattern("dd MMMM yyyy, hh:mm a");
 
@@ -28,6 +42,7 @@ public final class ExcelExporter {
     // STYLE FACTORIES
     // ═══════════════════════════════════════════════════════════════
 
+    // Creates style for company title
     private static CellStyle createCompanyStyle(XSSFWorkbook wb) {
         CellStyle style = wb.createCellStyle();
         XSSFFont font = wb.createFont();
@@ -40,6 +55,7 @@ public final class ExcelExporter {
         return style;
     }
 
+    // Creates style for report title
     private static CellStyle createTitleStyle(XSSFWorkbook wb) {
         CellStyle style = wb.createCellStyle();
         XSSFFont font = wb.createFont();
@@ -52,6 +68,7 @@ public final class ExcelExporter {
         return style;
     }
 
+    // Creates style for subtitle (generated timestamp)
     private static CellStyle createSubtitleStyle(XSSFWorkbook wb) {
         CellStyle style = wb.createCellStyle();
         XSSFFont font = wb.createFont();
@@ -62,6 +79,7 @@ public final class ExcelExporter {
         return style;
     }
 
+    // Creates style for table header cells
     private static CellStyle createHeaderStyle(XSSFWorkbook wb) {
         CellStyle style = wb.createCellStyle();
         XSSFFont font = wb.createFont();
@@ -81,6 +99,7 @@ public final class ExcelExporter {
         return style;
     }
 
+    // Creates style for table data cells with optional alternate row color
     private static CellStyle createDataStyle(XSSFWorkbook wb, boolean altRow) {
         CellStyle style = wb.createCellStyle();
         XSSFFont font = wb.createFont();
@@ -105,6 +124,7 @@ public final class ExcelExporter {
         return style;
     }
 
+    // Creates style for currency values with formatting
     private static CellStyle createCurrencyStyle(XSSFWorkbook wb, boolean altRow) {
         CellStyle style = createDataStyle(wb, altRow);
         DataFormat format = wb.createDataFormat();
@@ -116,6 +136,7 @@ public final class ExcelExporter {
     // TITLE ROWS (shared)
     // ═══════════════════════════════════════════════════════════════
 
+    // Adds company name, report title, and generated timestamp rows
     private static void addTitleRows(Sheet sheet, XSSFWorkbook wb, String reportTitle,
                                      int month, int year, int columnCount) {
         Row companyRow = sheet.createRow(0);
@@ -149,6 +170,7 @@ public final class ExcelExporter {
     // GENERIC EXPORT — used by all new controllers
     // ═══════════════════════════════════════════════════════════════
 
+    // Exports generic tabular data into an Excel file
     public static void export(String sheetName, String[] headers, List<String[]> data,
                               javafx.stage.Window owner) {
         javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
@@ -214,7 +236,7 @@ public final class ExcelExporter {
                 }
             }
 
-            // Auto-size
+            // Auto-size columns
             for (int i = 0; i < headers.length; i++) {
                 sheet.autoSizeColumn(i);
                 int w = sheet.getColumnWidth(i);
@@ -239,6 +261,7 @@ public final class ExcelExporter {
     // LEGACY: EXPORT PAYROLL
     // ═══════════════════════════════════════════════════════════════
 
+    // Exports payroll data into an Excel report
     public static void exportPayroll(List<Payroll> payrolls, int month, int year,
                                      String outputPath) {
         try (XSSFWorkbook wb = new XSSFWorkbook()) {
@@ -301,6 +324,7 @@ public final class ExcelExporter {
     // LEGACY: EXPORT ATTENDANCE
     // ═══════════════════════════════════════════════════════════════
 
+    // Exports attendance records into an Excel report
     public static void exportAttendance(List<AttendanceRecord> records, int month, int year,
                                         String outputPath) {
         try (XSSFWorkbook wb = new XSSFWorkbook()) {
@@ -359,6 +383,7 @@ public final class ExcelExporter {
     // UTILITY
     // ═══════════════════════════════════════════════════════════════
 
+    // Returns the month name based on integer value (1–12)
     private static String getMonthName(int month) {
         String[] months = {"", "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"};
