@@ -10,8 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// OOP Concepts Used:
+// Encapsulation - Database access logic is encapsulated within this repository class.
+// Abstraction - Uses DatabaseConnection class to abstract database connection details.
+// Inheritance - Uses standard Java classes (Connection, PreparedStatement, ResultSet) with polymorphic behavior.
+// Polymorphism - Optional class used to handle presence or absence of user objects gracefully.
+
 public class UserRepository {
 
+    // Finds a user by their username. Returns an Optional<User> which may be empty if user not found
     public Optional<User> findByUsername(String username) throws DatabaseException {
         String sql = "SELECT * FROM users WHERE username = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -26,6 +33,7 @@ public class UserRepository {
         return Optional.empty();
     }
 
+    // Finds a user by their unique ID. Returns an Optional<User> which may be empty if user not found
     public Optional<User> findById(int id) throws DatabaseException {
         String sql = "SELECT * FROM users WHERE user_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -40,6 +48,7 @@ public class UserRepository {
         return Optional.empty();
     }
 
+    // Retrieves all users from the database and returns them as a List<User>
     public List<User> findAll() throws DatabaseException {
         List<User> list = new ArrayList<>();
         String sql = "SELECT * FROM users ORDER BY username";
@@ -53,6 +62,7 @@ public class UserRepository {
         return list;
     }
 
+    // Saves a new user to the database and sets its generated ID on the user object
     public void save(User user) throws DatabaseException {
         String sql = "INSERT INTO users (username, password_hash, role_id, is_active, created_at) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -71,6 +81,7 @@ public class UserRepository {
         }
     }
 
+    // Updates an existing user's information in the database
     public void update(User user) throws DatabaseException {
         String sql = "UPDATE users SET username=?, password_hash=?, role_id=?, is_active=? WHERE user_id=?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -86,6 +97,7 @@ public class UserRepository {
         }
     }
 
+    // Deletes a user from the database by their ID
     public void deleteById(int id) throws DatabaseException {
         String sql = "DELETE FROM users WHERE user_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -97,6 +109,7 @@ public class UserRepository {
         }
     }
 
+    // Maps a ResultSet row to a User object
     private User mapRow(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("user_id"),
