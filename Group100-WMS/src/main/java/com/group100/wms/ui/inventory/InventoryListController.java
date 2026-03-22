@@ -1,3 +1,4 @@
+```java id="p8xk21"
 package com.group100.wms.ui.inventory;
 
 import com.group100.wms.core.DatabaseConnection;
@@ -16,17 +17,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// OOP Concepts Used:
+// Encapsulation - UI components and data are encapsulated within the controller and model classes.
+// Abstraction - Controller abstracts UI logic and interaction from underlying database operations.
+// Inheritance - JavaFX components inherit from base UI classes (e.g., TableView, Label).
+// Polymorphism - Method references and lambda expressions allow flexible behavior (e.g., cell value factories, streams).
+
 public class InventoryListController {
 
+    // Labels displaying summary information such as total items, categories, and warehouse counts
     @FXML private Label lblTotalItems, lblCategories, lblWh1, lblWh2;
+
+    // ComboBox used for selecting item category filter
     @FXML private ComboBox<String> cmbCategory;
+
+    // TextField used for searching items by name or SKU
     @FXML private TextField txtSearch;
+
+    // TableView to display list of items
     @FXML private TableView<Item> itemTable;
+
+    // Table columns representing item properties
     @FXML private TableColumn<Item, Number> colId;
     @FXML private TableColumn<Item, String> colSku, colName, colCategory, colColour, colUnit, colWarehouse;
 
+    // Observable list storing all items loaded from the database
     private ObservableList<Item> allItems;
 
+    // Initializes the table columns and loads data when the UI is loaded
     @FXML
     public void initialize() {
         colId.setCellValueFactory(cd -> new SimpleIntegerProperty(cd.getValue().getId()));
@@ -40,6 +58,7 @@ public class InventoryListController {
         loadData();
     }
 
+    // Loads item data from the database, populates the table, and updates summary labels and category filter
     private void loadData() {
         allItems = FXCollections.observableArrayList();
         String sql = "SELECT * FROM items ORDER BY category, name";
@@ -75,6 +94,7 @@ public class InventoryListController {
         lblWh2.setText(String.valueOf(allItems.stream().filter(i -> i.getWarehouseId() == 2).count()));
     }
 
+    // Filters the displayed items based on selected category and search text
     @FXML
     private void handleFilter() {
         String cat = cmbCategory.getValue();
@@ -87,6 +107,7 @@ public class InventoryListController {
         itemTable.setItems(FXCollections.observableArrayList(filtered));
     }
 
+    // Resets filters and displays all items in the table
     @FXML
     private void handleReset() {
         cmbCategory.setValue("All Categories");
@@ -94,6 +115,7 @@ public class InventoryListController {
         itemTable.setItems(allItems);
     }
 
+    // Exports the currently displayed table data to a PDF report
     @FXML
     private void handleExportPdf() {
         String[] headers = {"ID", "SKU", "Name", "Category", "Colour", "Unit", "Warehouse"};
@@ -106,6 +128,7 @@ public class InventoryListController {
         PdfExporter.export("Inventory Report", headers, data, itemTable.getScene().getWindow());
     }
 
+    // Exports the currently displayed table data to an Excel file
     @FXML
     private void handleExportExcel() {
         String[] headers = {"ID", "SKU", "Name", "Category", "Colour", "Unit", "Warehouse"};
@@ -118,3 +141,4 @@ public class InventoryListController {
         ExcelExporter.export("Inventory", headers, data, itemTable.getScene().getWindow());
     }
 }
+```
