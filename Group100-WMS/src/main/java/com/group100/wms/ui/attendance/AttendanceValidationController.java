@@ -1,3 +1,25 @@
+// =============================================================================
+// AttendanceValidationController.java
+// Part of: Centralized Apparel Warehouse Management System (WMS)
+// Module: Attendance UI — Validation & Approval View
+//
+// OOP CONCEPTS USED IN THIS CLASS:
+// - ENCAPSULATION: All @FXML fields are private, and attendanceService is a
+//   private final field. Status update logic is encapsulated in the private
+//   updateSelectedStatus() method, which the three public action handlers
+//   delegate to — hiding the implementation details behind clean method calls.
+// - ABSTRACTION: AttendanceService abstracts all business logic for fetching
+//   and updating records. AttendanceRepository abstracts direct database
+//   access. SessionManager abstracts user session state. This controller
+//   only concerns itself with UI wiring and user interactions.
+// - INHERITANCE: TableRow is anonymously subclassed inside setRowFactory()
+//   to override updateItem(), applying colour-coded row backgrounds based
+//   on each record's attendance status (ABSENT = red, HALF_DAY = yellow).
+// - POLYMORPHISM: The overridden updateItem() inside the anonymous TableRow
+//   subclass demonstrates runtime polymorphism — JavaFX calls the correct
+//   overridden version at runtime when rendering each row.
+// =============================================================================
+
 package com.group100.wms.ui.attendance;
 
 import com.group100.wms.core.SessionManager;
@@ -16,22 +38,51 @@ import java.util.List;
 
 public class AttendanceValidationController {
 
+    // Main table displaying attendance records for validation and approval
     @FXML private TableView<AttendanceRecord> validationTable;
+
+    // Column for the unique attendance record ID
     @FXML private TableColumn<AttendanceRecord, Integer> colId;
+
+    // Column for the employee's ID number
     @FXML private TableColumn<AttendanceRecord, Integer> colEmployeeId;
+
+    // Column for the employee's full name
     @FXML private TableColumn<AttendanceRecord, String> colName;
+
+    // Column for the attendance date
     @FXML private TableColumn<AttendanceRecord, String> colDate;
+
+    // Column for the clock-in time (empty string if not recorded)
     @FXML private TableColumn<AttendanceRecord, String> colCheckIn;
+
+    // Column for the clock-out time (empty string if not recorded)
     @FXML private TableColumn<AttendanceRecord, String> colCheckOut;
+
+    // Column showing total hours worked, formatted to two decimal places
     @FXML private TableColumn<AttendanceRecord, String> colHours;
+
+    // Column showing the current attendance status (PRESENT, ABSENT, HALF_DAY)
     @FXML private TableColumn<AttendanceRecord, String> colStatus;
+
+    // Dropdown for selecting the month to filter/load records (1–12)
     @FXML private ComboBox<Integer> monthCombo;
+
+    // Dropdown for selecting the year to filter/load records
     @FXML private ComboBox<Integer> yearCombo;
+
+    // Label used to display feedback messages for load, update, and error events
     @FXML private Label statusLabel;
 
+    // Service layer object responsible for all attendance business logic.
+    // Constructed with an AttendanceRepository to handle database operations.
     private final AttendanceService attendanceService =
             new AttendanceService(new AttendanceRepository());
 
+    // Called automatically by JavaFX after all @FXML fields are injected.
+    // Binds each table column to its corresponding AttendanceRecord getter,
+    // sets up colour-coded row highlighting by status, populates the month/year
+    // dropdowns with the current date as default, then loads records.
     @FXML
     public void initialize() {
         colId.setCellValueFactory(d ->
@@ -88,6 +139,9 @@ public class AttendanceValidationController {
         loadRecords();
     }
 
+    // Fetches attendance records for the currently selected month and year
+    // from the service layer and populates the validation table.
+    // Updates the status label with the record count, or an error message on failure.
     private void loadRecords() {
         try {
             int month = monthCombo.getValue();
@@ -101,21 +155,31 @@ public class AttendanceValidationController {
         }
     }
 
+    // Triggered when the user clicks the "Approve as Present" button.
+    // Delegates to updateSelectedStatus() to set the selected record's status to PRESENT.
     @FXML
     private void handleApprovePresent() {
         updateSelectedStatus("PRESENT");
     }
 
+    // Triggered when the user clicks the "Approve as Half Day" button.
+    // Delegates to updateSelectedStatus() to set the selected record's status to HALF_DAY.
     @FXML
     private void handleApproveHalfDay() {
         updateSelectedStatus("HALF_DAY");
     }
 
+    // Triggered when the user clicks the "Mark as Absent" button.
+    // Delegates to updateSelectedStatus() to set the selected record's status to ABSENT.
     @FXML
     private void handleMarkAbsent() {
         updateSelectedStatus("ABSENT");
     }
 
+    // Core status update method shared by all three approval action handlers.
+    // Retrieves the currently selected record, applies the new status and the
+    // current user's ID as the approver, then persists the change via the service layer.
+    // Refreshes the table after a successful update, or shows an error on failure.
     private void updateSelectedStatus(String newStatus) {
         AttendanceRecord selected = validationTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
@@ -134,9 +198,13 @@ public class AttendanceValidationController {
         }
     }
 
+    // Triggered when the user clicks the "Filter" button.
+    // Reloads records from the database using the currently selected month and year.
     @FXML
     private void handleFilter() { loadRecords(); }
 
+    // Triggered when the user clicks the "Refresh" button.
+    // Reloads the latest attendance records for the selected month and year.
     @FXML
     private void handleRefresh() { loadRecords(); }
 }
