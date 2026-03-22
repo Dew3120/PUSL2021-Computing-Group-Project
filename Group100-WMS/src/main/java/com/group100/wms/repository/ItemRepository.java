@@ -6,8 +6,18 @@ import com.group100.wms.model.Item;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Repository class for handling Item-related database operations.
+ *
+ * OOP Concepts Used:
+ * - Encapsulation: Database access logic is contained within this class.
+ * - Abstraction: Provides simple methods to interact with the database without exposing SQL complexity.
+ * - Polymorphism: Uses method overloading and exception handling across different methods.
+ * - No direct inheritance used in this class.
+ */
 public class ItemRepository {
 
+    // Retrieves all items from the database ordered by category and name
     public List<Item> findAll() throws DatabaseException {
         List<Item> list = new ArrayList<>();
         String sql = "SELECT item_id, sku, name, description, category, colour, unit, warehouse_id " +
@@ -22,6 +32,7 @@ public class ItemRepository {
         return list;
     }
 
+    // Finds a specific item by its ID
     public Optional<Item> findById(int id) throws DatabaseException {
         String sql = "SELECT item_id, sku, name, description, category, colour, unit, warehouse_id " +
                 "FROM items WHERE item_id = ?";
@@ -37,6 +48,7 @@ public class ItemRepository {
         return Optional.empty();
     }
 
+    // Retrieves all items that belong to a specific warehouse
     public List<Item> findByWarehouseId(int warehouseId) throws DatabaseException {
         List<Item> list = new ArrayList<>();
         String sql = "SELECT item_id, sku, name, description, category, colour, unit, warehouse_id " +
@@ -53,6 +65,7 @@ public class ItemRepository {
         return list;
     }
 
+    // Retrieves the total available stock level for a given item
     public int getStockLevel(int itemId) throws DatabaseException {
         String sql = "SELECT COALESCE(SUM(available_qty), 0) FROM batches WHERE item_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -66,7 +79,7 @@ public class ItemRepository {
         }
         return 0;
     }
-
+    // Saves a new item into the database and retrieves the generated ID
     public void save(Item item) throws DatabaseException {
         String sql = "INSERT INTO items (sku, name, description, category, colour, unit, warehouse_id) " +
                 "VALUES (?,?,?,?,?,?,?)";
@@ -88,6 +101,7 @@ public class ItemRepository {
         }
     }
 
+    // Updates an existing item in the database
     public void update(Item item) throws DatabaseException {
         String sql = "UPDATE items SET sku=?, name=?, description=?, category=?, " +
                 "colour=?, unit=?, warehouse_id=? WHERE item_id=?";
@@ -107,6 +121,7 @@ public class ItemRepository {
         }
     }
 
+    // Maps a database result set row to an Item object
     private Item mapRow(ResultSet rs) throws SQLException {
         return new Item(
                 rs.getInt("item_id"), rs.getString("sku"),
