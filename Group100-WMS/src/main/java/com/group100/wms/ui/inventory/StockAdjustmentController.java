@@ -1,3 +1,4 @@
+```java id="v7n2kp"
 package com.group100.wms.ui.inventory;
 
 import com.group100.wms.core.AuditLogger;
@@ -15,20 +16,43 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.util.List;
 
+// OOP Concepts Used:
+// Encapsulation - UI components and related logic are encapsulated within the controller.
+// Abstraction - The controller abstracts user interactions from the business logic handled by services.
+// Inheritance - JavaFX controls inherit from base UI classes.
+// Polymorphism - Method calls to services and repositories can have different implementations.
+
 public class StockAdjustmentController {
 
+    // ComboBox for selecting an item to adjust stock
     @FXML private ComboBox<Item> itemComboBox;
+
+    // TextField to input quantity for adjustment
     @FXML private TextField quantityField;
+
+    // TextField to input cost price for stock addition
     @FXML private TextField costPriceField;
+
+    // ComboBox to select adjustment type (ADD or REMOVE)
     @FXML private ComboBox<String> adjustmentTypeCombo;
+
+    // Label to display current stock of selected item
     @FXML private Label currentStockLabel;
+
+    // Label to display status messages (success/error)
     @FXML private Label statusLabel;
 
+    // Service used for inventory-related operations such as fetching stock and deducting stock
     private final InventoryService inventoryService =
             new InventoryService(new ItemRepository(), new BatchRepository());
+
+    // Repository used for batch-related database operations
     private final BatchRepository batchRepository = new BatchRepository();
+
+    // Repository used for item-related database operations
     private final ItemRepository itemRepository = new ItemRepository();
 
+    // Initializes UI components, sets default values, and loads items into the ComboBox
     @FXML
     public void initialize() {
         adjustmentTypeCombo.setItems(FXCollections.observableArrayList("ADD", "REMOVE"));
@@ -37,6 +61,7 @@ public class StockAdjustmentController {
         itemComboBox.setOnAction(e -> updateCurrentStock());
     }
 
+    // Loads all items from the database and populates the ComboBox
     private void loadItems() {
         try {
             List<Item> items = itemRepository.findAll();
@@ -46,6 +71,7 @@ public class StockAdjustmentController {
         }
     }
 
+    // Updates the current stock label based on the selected item
     private void updateCurrentStock() {
         Item selected = itemComboBox.getValue();
         if (selected == null) return;
@@ -57,6 +83,7 @@ public class StockAdjustmentController {
         }
     }
 
+    // Handles applying stock adjustment (ADD or REMOVE) based on user input
     @FXML
     private void handleApply() {
         Item selected = itemComboBox.getValue();
@@ -97,6 +124,7 @@ public class StockAdjustmentController {
         }
     }
 
+    // Clears all input fields and resets labels to default state
     @FXML
     private void handleClear() {
         itemComboBox.setValue(null);
@@ -106,3 +134,4 @@ public class StockAdjustmentController {
         statusLabel.setText("");
     }
 }
+```
