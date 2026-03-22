@@ -12,10 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// OOP Concepts used in this class:
+// 1. Encapsulation: Use of private helper methods (mapRow) and wrapping data access logic within a specific repository class.
+// 2. Abstraction: Hiding the complexity of SQL queries and database connection management behind simple method calls.
 public class GinRepository {
 
+    // Retrieves all Goods Issue Note records from the database ordered by date
     public List<GoodsIssueNote> findAll() throws DatabaseException {
+        // Stores the list of GoodsIssueNote objects retrieved from the database
         List<GoodsIssueNote> list = new ArrayList<>();
+        // Stores the SQL query string for selecting all records
         String sql = "SELECT gin_id, warehouse_id, destination, destination_type, " +
                 "issued_by, issued_date, status " +
                 "FROM goods_issue_notes ORDER BY issued_date DESC";
@@ -29,7 +35,9 @@ public class GinRepository {
         return list;
     }
 
+    // Searches for a specific Goods Issue Note by its unique ID
     public Optional<GoodsIssueNote> findById(int ginId) throws DatabaseException {
+        // Stores the SQL query string for selecting a record by ID
         String sql = "SELECT gin_id, warehouse_id, destination, destination_type, " +
                 "issued_by, issued_date, status " +
                 "FROM goods_issue_notes WHERE gin_id = ?";
@@ -45,7 +53,9 @@ public class GinRepository {
         return Optional.empty();
     }
 
+    // Inserts a new Goods Issue Note record into the database and updates the object with the generated ID
     public void save(GoodsIssueNote gin) throws DatabaseException {
+        // Stores the SQL query string for inserting a new GIN record
         String sql = "INSERT INTO goods_issue_notes " +
                 "(warehouse_id, destination, destination_type, issued_by, issued_date, status) " +
                 "VALUES (?,?,?,?,?,?)";
@@ -66,7 +76,9 @@ public class GinRepository {
         }
     }
 
+    // Updates the status of an existing Goods Issue Note in the database
     public void updateStatus(int ginId, String status) throws DatabaseException {
+        // Stores the SQL query string for updating the status column
         String sql = "UPDATE goods_issue_notes SET status = ? WHERE gin_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -78,6 +90,7 @@ public class GinRepository {
         }
     }
 
+    // Converts a single row from the SQL ResultSet into a GoodsIssueNote object
     private GoodsIssueNote mapRow(ResultSet rs) throws java.sql.SQLException {
         return new GoodsIssueNote(
                 rs.getInt("gin_id"),
