@@ -1,3 +1,26 @@
+// =============================================================================
+// PayrollRepository.java
+// Part of: Centralized Apparel Warehouse Management System (WMS)
+// Module: Repository Layer — Payroll Database Access
+//
+// OOP CONCEPTS USED IN THIS CLASS:
+// - ENCAPSULATION: The SQL query strings are defined locally within each method
+//   rather than exposed as class-level fields. The mapRow() helper is private,
+//   hiding the ResultSet-to-Payroll mapping logic from all callers and ensuring
+//   it can only be changed in one place.
+// - ABSTRACTION: DatabaseConnection abstracts the underlying JDBC connection
+//   setup and pooling. The Payroll model object abstracts the raw column values
+//   into a clean Java object. Callers of this repository never deal with SQL,
+//   ResultSets, or connection management — only with Payroll objects and lists.
+// - POLYMORPHISM: mapRow() is called uniformly from both findByMonthYear() and
+//   findByEmployee() regardless of which query produced the ResultSet, producing
+//   a correctly populated Payroll object in both cases from a single method.
+// - INHERITANCE: Payroll follows the JavaBean contract with getters and setters,
+//   and DatabaseException wraps java.sql.SQLException — inheriting from the
+//   application's custom exception hierarchy to provide consistent error handling
+//   across all repository classes in the system.
+// =============================================================================
+
 package com.group100.wms.repository;
 
 import com.group100.wms.core.DatabaseConnection;
@@ -14,6 +37,11 @@ import java.util.Optional;
 
 public class PayrollRepository {
 
+    // Retrieves all payroll records for a given month and year, joining with the
+    // employees table to include each employee's full name in the result.
+    // Results are ordered alphabetically by employee name.
+    // Returns a list of mapped Payroll objects, or an empty list if none exist.
+    // Throws DatabaseException if the SQL query fails.
     public List<Payroll> findByMonthYear(int month, int year) throws DatabaseException {
         List<Payroll> list = new ArrayList<>();
         String sql = "SELECT p.payroll_id, p.employee_id, p.month, p.year, p.base_salary, " +
@@ -34,6 +62,10 @@ public class PayrollRepository {
         return list;
     }
 
+    // Retrieves the complete payroll history for a single employee identified by their ID.
+    // Results are ordered by most recent year and month first.
+    // Returns a list of mapped Payroll objects, or an empty list if none exist.
+    // Throws DatabaseException if the SQL query fails.
     public List<Payroll> findByEmployee(int employeeId) throws DatabaseException {
         List<Payroll> list = new ArrayList<>();
         String sql = "SELECT payroll_id, employee_id, month, year, base_salary, overtime, " +
@@ -51,6 +83,11 @@ public class PayrollRepository {
         return list;
     }
 
+    // Inserts a new payroll record into the database for the given Payroll object.
+    // Uses RETURN_GENERATED_KEYS to retrieve and set the auto-generated payroll_id
+    // back onto the Payroll object after a successful insert.
+    // If generatedAt is null, falls back to today's date for the generated_date column.
+    // Throws DatabaseException if the insert fails.
     public void save(Payroll p) throws DatabaseException {
         String sql = "INSERT INTO payroll (employee_id, month, year, base_salary, overtime, " +
                 "deductions, epf_employer, etf, net_salary, generated_by, generated_date) " +
@@ -78,6 +115,11 @@ public class PayrollRepository {
         }
     }
 
+    // Private helper that maps a single row from a ResultSet into a Payroll object.
+    // Called by both findByMonthYear() and findByEmployee() to avoid duplicating
+    // column-to-field mapping logic. Silently ignores the full_name column if it
+    // is not present in the ResultSet (e.g. when the employees table is not joined).
+    // Throws java.sql.SQLException if any required column cannot be read.
     private Payroll mapRow(ResultSet rs) throws java.sql.SQLException {
         Payroll p = new Payroll();
         p.setId(rs.getInt("payroll_id"));
