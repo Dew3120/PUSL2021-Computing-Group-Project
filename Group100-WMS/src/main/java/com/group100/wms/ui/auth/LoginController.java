@@ -16,15 +16,27 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+// OOP Concepts Used:
+// Encapsulation - Variables and methods are contained within this controller class.
+// Abstraction - AuthService hides the details of authentication logic and database access.
+// Association - This controller interacts with AuthService, UserRepository, and JavaFX UI components.
+
 public class LoginController {
 
+    // TextField for entering username
     @FXML private TextField usernameField;
+
+    // PasswordField for entering user password
     @FXML private PasswordField passwordField;
+
+    // Label for displaying error or status messages
     @FXML private Label errorLabel;
 
+    // Service object for handling authentication logic
     private final AuthService authService =
             new AuthService(new UserRepository());
 
+    // Handles login button action, validates user, and loads corresponding dashboard
     @FXML
     private void handleLogin() {
         errorLabel.setText("");
@@ -40,6 +52,7 @@ public class LoginController {
         }
     }
 
+    // Loads the dashboard UI based on the user's role
     private void loadDashboard(User user) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -63,6 +76,7 @@ public class LoginController {
         }
     }
 
+    // Determines which dashboard FXML to load based on the user's role ID
     private String resolveDashboardFxml(int roleId) {
         return switch (roleId) {
             case 1 -> "/fxml/dashboard/AdminDashboard.fxml";
