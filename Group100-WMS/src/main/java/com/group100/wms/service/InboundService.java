@@ -1,3 +1,4 @@
+```java
 package com.group100.wms.service;
 
 import com.group100.wms.core.AuditLogger;
@@ -12,12 +13,24 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+// OOP Concepts Used:
+// Encapsulation - Data and related operations are encapsulated within model and repository classes.
+// Abstraction - This service layer hides business logic details from the UI/controller.
+// Inheritance - Custom exceptions like DatabaseException likely inherit from base Exception class.
+// Polymorphism - Repository interfaces may have different implementations with same method signatures.
+
 public class InboundService {
 
+    // Stores reference to PurchaseOrderRepository for handling purchase order database operations
     private final PurchaseOrderRepository poRepository;
+
+    // Stores reference to GrnRepository for handling Goods Received Note (GRN) operations
     private final GrnRepository grnRepository;
+
+    // Stores reference to BatchRepository for handling batch-related database operations
     private final BatchRepository batchRepository;
 
+    // Constructor to initialize repositories used in inbound operations
     public InboundService(PurchaseOrderRepository poRepository,
                           GrnRepository grnRepository,
                           BatchRepository batchRepository) {
@@ -26,6 +39,7 @@ public class InboundService {
         this.batchRepository = batchRepository;
     }
 
+    // Creates a new Purchase Order, sets initial status and date, and logs the action
     public PurchaseOrder createPurchaseOrder(PurchaseOrder po) throws DatabaseException {
         po.setStatus("PENDING");
         po.setOrderDate(LocalDate.now());
@@ -36,10 +50,12 @@ public class InboundService {
         return po;
     }
 
+    // Retrieves all purchase orders from the database
     public List<PurchaseOrder> getAllPurchaseOrders() throws DatabaseException {
         return poRepository.findAll();
     }
 
+    // Processes received goods by creating a GRN, generating batches, and updating PO status
     public GoodsReceivedNote receiveGoods(GoodsReceivedNote grn, List<GrnItem> items)
             throws DatabaseException {
         grn.setReceivedDate(LocalDate.now());
@@ -66,11 +82,14 @@ public class InboundService {
         return grn;
     }
 
+    // Retrieves all Goods Received Notes (GRNs) from the database
     public List<GoodsReceivedNote> getAllGrns() throws DatabaseException {
         return grnRepository.findAll();
     }
 
+    // Retrieves a specific GRN by its ID, wrapped in Optional to handle null values safely
     public Optional<GoodsReceivedNote> getGrnById(int id) throws DatabaseException {
         return grnRepository.findById(id);
     }
 }
+```
