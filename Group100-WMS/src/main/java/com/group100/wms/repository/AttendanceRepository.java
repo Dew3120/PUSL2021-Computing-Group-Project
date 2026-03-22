@@ -12,10 +12,16 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+// OOP Concepts used in this class:
+// 1. Encapsulation: The class bundles data access logic for attendance and uses a private helper method (mapRow) to handle internal object mapping.
+// 2. Abstraction: Simplifies database interactions by providing high-level methods like save() and update(), hiding the complexity of SQL queries and connection handling.
 public class AttendanceRepository {
 
+    // Retrieves all attendance records for a specific month and year, joining with employee names
     public List<AttendanceRecord> findByMonthYear(int month, int year) throws DatabaseException {
+        // Stores the collection of attendance records found for the given period
         List<AttendanceRecord> list = new ArrayList<>();
+        // Stores the SQL query string used to fetch and join attendance and employee data
         String sql = "SELECT a.attendance_id, a.employee_id, a.date, a.clock_in, a.clock_out, " +
                 "a.status, a.approved_by, e.full_name " +
                 "FROM attendance_records a " +
@@ -35,8 +41,11 @@ public class AttendanceRepository {
         return list;
     }
 
+    // Retrieves all attendance history for a specific employee ID
     public List<AttendanceRecord> findByEmployee(int employeeId) throws DatabaseException {
+        // Stores the collection of attendance records for the specific employee
         List<AttendanceRecord> list = new ArrayList<>();
+        // Stores the SQL query string to filter attendance by employee ID
         String sql = "SELECT attendance_id, employee_id, date, clock_in, clock_out, status, approved_by " +
                 "FROM attendance_records WHERE employee_id = ? ORDER BY date DESC";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -51,7 +60,9 @@ public class AttendanceRepository {
         return list;
     }
 
+    // Inserts a new attendance record into the database and retrieves the generated primary key
     public void save(AttendanceRecord r) throws DatabaseException {
+        // Stores the SQL query string for inserting new attendance data
         String sql = "INSERT INTO attendance_records (employee_id, date, clock_in, clock_out, status, approved_by) " +
                 "VALUES (?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -71,7 +82,9 @@ public class AttendanceRepository {
         }
     }
 
+    // Updates the clock times, status, and approval details of an existing attendance record
     public void update(AttendanceRecord r) throws DatabaseException {
+        // Stores the SQL query string for updating an existing record based on its ID
         String sql = "UPDATE attendance_records SET clock_in=?, clock_out=?, status=?, approved_by=? " +
                 "WHERE attendance_id=?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -87,12 +100,16 @@ public class AttendanceRepository {
         }
     }
 
+    // Maps a row from the database ResultSet to an AttendanceRecord model object
     private AttendanceRecord mapRow(ResultSet rs) throws java.sql.SQLException {
+        // Stores the temporary AttendanceRecord object being populated
         AttendanceRecord r = new AttendanceRecord();
         r.setId(rs.getInt("attendance_id"));
         r.setEmployeeId(rs.getInt("employee_id"));
         r.setDate(rs.getDate("date").toLocalDate());
+        // Stores the SQL Time value for clock-in to check for nulls
         Time ci = rs.getTime("clock_in");
+        // Stores the SQL Time value for clock-out to check for nulls
         Time co = rs.getTime("clock_out");
         r.setClockIn(ci != null ? ci.toLocalTime() : null);
         r.setClockOut(co != null ? co.toLocalTime() : null);
