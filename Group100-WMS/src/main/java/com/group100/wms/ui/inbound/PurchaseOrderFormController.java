@@ -16,22 +16,43 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Controller for handling Purchase Order form operations in the UI.
+ *
+ * OOP Concepts Used:
+ * - Encapsulation: UI components and business logic are managed within this class.
+ * - Abstraction: Uses service and repository layers to hide database operations.
+ * - Polymorphism: Possible use through service/repository implementations.
+ * - No direct inheritance used in this class.
+ */
 public class PurchaseOrderFormController {
 
+    // ComboBox used to select a supplier
     @FXML private ComboBox<Supplier> supplierCombo;
+
+    // DatePicker used to select expected delivery date
     @FXML private DatePicker expectedDeliveryDate;
+
+    // TextArea used to enter additional notes for the purchase order
     @FXML private TextArea notesArea;
+
+    // Label used to display status messages to the user
     @FXML private Label statusLabel;
 
+    // Service layer used to handle inbound operations such as creating purchase orders
     private final InboundService inboundService = new InboundService(
             new PurchaseOrderRepository(), new GrnRepository(), new BatchRepository());
+
+    // Repository used to fetch supplier data from the database
     private final SupplierRepository supplierRepository = new SupplierRepository();
 
+    // Initializes the form by loading supplier data into the ComboBox
     @FXML
     public void initialize() {
         loadSuppliers();
     }
 
+    // Loads all active suppliers from the database and populates the ComboBox
     private void loadSuppliers() {
         try {
             List<Supplier> suppliers = supplierRepository.findAllActive();
@@ -41,6 +62,7 @@ public class PurchaseOrderFormController {
         }
     }
 
+    // Handles the save action: validates input, creates a purchase order, and stores it
     @FXML
     private void handleSave() {
         Supplier supplier = supplierCombo.getValue();
@@ -65,6 +87,7 @@ public class PurchaseOrderFormController {
         }
     }
 
+    // Clears all input fields in the form
     @FXML
     private void handleClear() {
         supplierCombo.setValue(null);
