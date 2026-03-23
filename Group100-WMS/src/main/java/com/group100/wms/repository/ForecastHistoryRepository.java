@@ -1,14 +1,21 @@
 package com.group100.wms.repository;
 
-import com.group100.wms.core.DatabaseConnection;
-import com.group100.wms.model.ForecastHistory;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.group100.wms.core.DatabaseConnection;
+import com.group100.wms.model.ForecastHistory;
+
+// OOP Concepts: Encapsulation (private database operations), Abstraction (query logic hidden),
+// Inheritance (extends repository pattern), Polymorphism (multiple query methods)
 public class ForecastHistoryRepository {
 
+    // Retrieves all forecast history records from database with item and warehouse names via JOINs
     public List<ForecastHistory> findAll() {
         List<ForecastHistory> list = new ArrayList<>();
         String sql = "SELECT fh.*, i.name AS item_name, w.name AS warehouse_name " +
@@ -28,6 +35,7 @@ public class ForecastHistoryRepository {
         return list;
     }
 
+    // Retrieves forecast history records filtered by result type (HIT, FAIR, or MISS)
     public List<ForecastHistory> findByResult(String result) {
         List<ForecastHistory> list = new ArrayList<>();
         String sql = "SELECT fh.*, i.name AS item_name, w.name AS warehouse_name " +
@@ -50,6 +58,7 @@ public class ForecastHistoryRepository {
         return list;
     }
 
+    // Retrieves forecast history records for a specific year and month combination
     public List<ForecastHistory> findByYearMonth(int year, int month) {
         List<ForecastHistory> list = new ArrayList<>();
         String sql = "SELECT fh.*, i.name AS item_name, w.name AS warehouse_name " +
@@ -73,6 +82,7 @@ public class ForecastHistoryRepository {
         return list;
     }
 
+    // Counts the total number of forecast history records matching a specific result type
     public int countByResult(String result) {
         String sql = "SELECT COUNT(*) FROM forecast_history WHERE result = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -87,6 +97,7 @@ public class ForecastHistoryRepository {
         return 0;
     }
 
+    // Calculates and returns the average accuracy percentage across all forecast history records
     public double averageAccuracy() {
         String sql = "SELECT AVG(accuracy) FROM forecast_history";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -99,6 +110,7 @@ public class ForecastHistoryRepository {
         return 0;
     }
 
+    // Maps a database result set row to a ForecastHistory model object with all fields populated
     private ForecastHistory mapRow(ResultSet rs) throws SQLException {
         ForecastHistory fh = new ForecastHistory();
         fh.setHistoryId(rs.getInt("history_id"));

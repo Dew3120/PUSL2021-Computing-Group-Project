@@ -1,14 +1,22 @@
 package com.group100.wms.repository;
 
-import com.group100.wms.core.DatabaseConnection;
-import com.group100.wms.exception.DatabaseException;
-import com.group100.wms.model.Forecast;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.group100.wms.core.DatabaseConnection;
+import com.group100.wms.exception.DatabaseException;
+import com.group100.wms.model.Forecast;
+
+// OOP Concepts: Encapsulation (private data access logic), Abstraction (database operations hidden),
+// Inheritance (extends repository pattern), Polymorphism (different query methods)
 public class ForecastRepository {
 
+    // Retrieves all forecast records from the forecasts table ordered by most recent date
     public List<Forecast> findAll() throws DatabaseException {
         List<Forecast> list = new ArrayList<>();
         String sql = "SELECT forecast_id, item_id, warehouse_id, predicted_qty, " +
@@ -23,6 +31,7 @@ public class ForecastRepository {
         return list;
     }
 
+    // Retrieves all forecast records for a specific warehouse
     public List<Forecast> findByWarehouseId(int warehouseId) throws DatabaseException {
         List<Forecast> list = new ArrayList<>();
         String sql = "SELECT forecast_id, item_id, warehouse_id, predicted_qty, " +
@@ -39,6 +48,7 @@ public class ForecastRepository {
         return list;
     }
 
+    // Retrieves all forecast records for a specific inventory item
     public List<Forecast> findByItemId(int itemId) throws DatabaseException {
         List<Forecast> list = new ArrayList<>();
         String sql = "SELECT forecast_id, item_id, warehouse_id, predicted_qty, " +
@@ -55,6 +65,7 @@ public class ForecastRepository {
         return list;
     }
 
+    // Inserts a new forecast record into the database and sets the generated forecast ID
     public void save(Forecast forecast) throws DatabaseException {
         String sql = "INSERT INTO forecasts (item_id, warehouse_id, predicted_qty, " +
                 "confidence, generated_date, method) VALUES (?,?,?,?,?,?)";
@@ -76,6 +87,7 @@ public class ForecastRepository {
         }
     }
 
+    // Deletes all forecast records for a specific item and warehouse combination
     public void deleteByItemAndWarehouse(int itemId, int warehouseId) throws DatabaseException {
         String sql = "DELETE FROM forecasts WHERE item_id = ? AND warehouse_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -88,6 +100,7 @@ public class ForecastRepository {
         }
     }
 
+    // Maps a database result set row to a Forecast model object
     private Forecast mapRow(ResultSet rs) throws SQLException {
         java.sql.Date gd = rs.getDate("generated_date");
         return new Forecast(
