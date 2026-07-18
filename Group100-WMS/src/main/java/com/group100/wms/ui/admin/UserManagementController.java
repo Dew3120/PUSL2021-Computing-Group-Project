@@ -10,31 +10,18 @@ import javafx.scene.layout.*;
 
 import java.sql.*;
 
-// OOP Concepts Used:
-// Encapsulation - UI components and related logic are contained within this controller class.
-// Abstraction - Database operations are abstracted using DatabaseConnection and SQL queries.
-// Inheritance - JavaFX UI elements (Label, VBox, HBox, FlowPane) inherit from base Node classes.
-// Polymorphism - Methods like setText(), setStyle(), and layout behaviors differ across UI components.
-
 public class UserManagementController {
 
-    // Label to display total number of users in the system
     @FXML private Label lblTotalUsers, lblActive;
-
-    // FlowPane layout to dynamically hold and display user cards
     @FXML private FlowPane userCardsPane;
 
-    // Automatically called when the UI is loaded; initializes user data loading
     @FXML
     public void initialize() {
         loadUsers();
     }
 
-    // Fetches user data from the database, creates UI cards, and updates summary labels
     private void loadUsers() {
         userCardsPane.getChildren().clear();
-
-        // Stores total number of users retrieved from database
         int total = 0, active = 0;
 
         String sql = "SELECT u.*, r.role_name FROM users u JOIN roles r ON u.role_id = r.role_id ORDER BY u.user_id";
@@ -70,7 +57,6 @@ public class UserManagementController {
         lblActive.setText(String.valueOf(active));
     }
 
-    // Builds and returns a styled user card containing personal and professional details
     private VBox createUserCard(String fullName, String username, String role,
                                 String email, String phone, String department,
                                 String bio, String nic, String emergencyContact,
@@ -80,10 +66,8 @@ public class UserManagementController {
         card.setPadding(new Insets(15));
         card.setPrefWidth(350);
         card.setMinHeight(320);
-        card.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 8; " +
-                "-fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 2);");
+        card.getStyleClass().add("user-card");
 
-        // Stores initials generated from user's full name for avatar display
         String initials = "";
         if (fullName != null && !fullName.isEmpty()) {
             String[] parts = fullName.split(" ");
@@ -92,19 +76,15 @@ public class UserManagementController {
         }
 
         Label avatar = new Label(initials.toUpperCase());
-        avatar.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 20; " +
-                "-fx-font-weight: bold; -fx-pref-width: 50; -fx-pref-height: 50; " +
-                "-fx-background-radius: 25; -fx-alignment: center;");
+        avatar.getStyleClass().add("user-avatar");
         avatar.setAlignment(Pos.CENTER);
         avatar.setMinSize(50, 50);
         avatar.setMaxSize(50, 50);
 
         Label nameLabel = new Label(fullName != null ? fullName : username);
-        nameLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+        nameLabel.getStyleClass().add("user-card-name");
 
         Label roleLabel = new Label(role != null ? role.replace("_", " ") : "");
-
-        // Determines badge color based on user role
         String badgeColor = switch (role) {
             case "ADMIN" -> "#e74c3c";
             case "WAREHOUSE_MANAGER" -> "#3498db";
@@ -113,19 +93,17 @@ public class UserManagementController {
             case "SENIOR_MANAGER" -> "#8e44ad";
             default -> "#95a5a6";
         };
+        roleLabel.getStyleClass().add("role-badge");
+        roleLabel.setStyle("-fx-background-color: " + badgeColor + ";");
 
-        roleLabel.setStyle("-fx-background-color: " + badgeColor + "; -fx-text-fill: white; " +
-                "-fx-padding: 2 8; -fx-background-radius: 10; -fx-font-size: 11;");
-
-        Label statusLabel = new Label(isActive ? "● ONLINE" : "● OFFLINE");
-        statusLabel.setStyle("-fx-text-fill: " + (isActive ? "#27ae60" : "#95a5a6") + "; -fx-font-weight: bold; -fx-font-size: 11;");
+        Label statusLabel = new Label(isActive ? "ACTIVE" : "INACTIVE");
+        statusLabel.getStyleClass().add(isActive ? "status-online" : "status-offline");
 
         HBox header = new HBox(10, avatar, new VBox(4, nameLabel, new HBox(8, roleLabel, statusLabel)));
         header.setAlignment(Pos.CENTER_LEFT);
 
         VBox details = new VBox(4);
         details.setStyle("-fx-padding: 5 0 0 0;");
-
         if (department != null) addDetail(details, "Department", department);
         if (email != null) addDetail(details, "Email", email);
         if (phone != null) addDetail(details, "Phone", phone);
@@ -134,11 +112,10 @@ public class UserManagementController {
         if (skills != null) addDetail(details, "Skills", skills);
         if (emergencyContact != null) addDetail(details, "Emergency", emergencyContact);
 
-        // Displays user bio if available
         if (bio != null && !bio.isEmpty()) {
             Label bioLabel = new Label(bio);
             bioLabel.setWrapText(true);
-            bioLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #666; -fx-padding: 5 0 0 0;");
+            bioLabel.getStyleClass().add("user-bio");
             details.getChildren().add(bioLabel);
         }
 
@@ -146,13 +123,12 @@ public class UserManagementController {
         return card;
     }
 
-    // Adds a labeled detail (field name and value) to the provided container
     private void addDetail(VBox container, String label, String value) {
         HBox row = new HBox(5);
         Label lbl = new Label(label + ":");
-        lbl.setStyle("-fx-font-weight: bold; -fx-font-size: 11; -fx-min-width: 100;");
+        lbl.getStyleClass().add("user-detail-label");
         Label val = new Label(value);
-        val.setStyle("-fx-font-size: 11;");
+        val.getStyleClass().add("user-detail-value");
         val.setWrapText(true);
         row.getChildren().addAll(lbl, val);
         container.getChildren().add(row);

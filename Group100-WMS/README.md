@@ -1,94 +1,130 @@
-﻿[![Java](https://img.shields.io/badge/Java-17_LTS-orange)](https://openjdk.org/projects/jdk/17/)
-[![JavaFX](https://img.shields.io/badge/JavaFX-17-purple)](https://openjfx.io/)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)](https://www.mysql.com/)
-[![Maven](https://img.shields.io/badge/Maven-3.9+-C71A36)](https://maven.apache.org/)
-[![Python](https://img.shields.io/badge/Python-3.10-yellow)](https://www.python.org/)
-[![Status](https://img.shields.io/badge/status-complete-brightgreen)]()
+# Centralized Apparel Warehouse Management System
 
-# Group 100 - Centralized Apparel Warehouse Management System
+A JavaFX + MySQL desktop Warehouse Management System built for apparel warehouse operations as part of the PUSL2021 Computing Group Project. The system supports role-based access, inventory control, inbound and outbound stock workflows, attendance, leave requests, payroll, reporting, audit logs, and demand forecasting dashboards.
 
-A centralized, offline-first, AI-enhanced desktop Warehouse Management System built for Sri Lankan apparel manufacturers. Replaces manual bin cards, paper attendance registers, and spreadsheet-based payroll with a fully digital, role-based platform.
+## Tech Stack
 
-## Team
+- Java 17
+- JavaFX 17 with FXML
+- MySQL 8.0
+- Maven Wrapper
+- HikariCP connection pooling
+- jBCrypt password hashing
+- iText PDF export
+- Apache POI Excel export
+- Lightweight Python forecasting prototype helpers
 
-| Name | Student ID | Role |
-|------|-----------|------|
-| Thisara Gnanasena | 10967149 | Project Lead and Documentation |
-| Geekiyanage Fernando | 10967245 | Backend - Inventory / FIFO |
-| Geekiyanage Fernando | 10967144 | Database Design and Schema |
-| Peduru Fernando | 10967146 | Backend - Inbound / Outbound |
-| Yasuri Ukwattage | 10967216 | UI/UX Design and Frontend |
-| Thena Silva | 10967070 | AI Forecasting Module |
-| Mudalpath Mindula | 10967274 | Testing and Quality Assurance |
-| Warunika Kumarage | 10967172 | Labour Management and Payroll |
+## Core Features
 
-Module: PUSL2021 - Computing Group Project (25/AY/AU/M)
-University: Plymouth University / NSBM Green University
-Programmer: Mr. Diluka Wijesinghe
+- Login and role-based access control for Admin, Warehouse Manager, Supervisor, Accountant, and Senior Manager roles
+- Inventory management with item, warehouse, supplier, and batch records
+- FIFO stock deduction for outbound goods issue workflows
+- Purchase Order and Goods Received Note workflows
+- Goods Issue Note workflow with persisted FIFO batch allocations
+- Inter-warehouse stock transfer workflow
+- Employee directory and employee profile information
+- Attendance compilation, validation, leave requests, and reports
+- Payroll generation with EPF, ETF, overtime, and net salary calculations
+- PDF and Excel report exports
+- Audit logging for important system actions
+- Forecast dashboard and demand forecast generation from transaction/history data
 
-## System Overview
+## Verified Local Database Snapshot
 
-| Property | Detail |
-|----------|--------|
-| Type | Desktop application (LAN, offline-first) |
-| Architecture | 3-tier Client-Server |
-| Frontend | JavaFX 17 with FXML |
-| Backend | Java 17 LTS |
-| Database | MySQL 8.0 (16 tables, 3NF) |
-| AI Module | Python 3.10 - ARIMA forecasting |
-| Biometric | ZKTeco fingerprint SDK |
-| Security | bcrypt, RBAC, audit logging, 15-min timeout |
-| Reports | PDF (iText 7) and Excel (Apache POI 5.2) |
+The completed local database used for final verification contains 18 tables and seeded operational data:
 
-## User Roles
+| Data area | Count |
+|---|---:|
+| Employees | 100 |
+| Inventory items | 800 |
+| Purchase orders | 54 |
+| GRNs | 37 |
+| GINs | 68 |
+| Attendance records | 31,686 |
+| Leave requests | 43 |
+| Payroll records | 1,463 |
+| Forecast history records | 315 |
+| Audit logs | 174 |
 
-| Role | Access |
-|------|--------|
-| Admin | Full system access |
-| Warehouse Manager | Inventory, Inbound, Outbound, Attendance |
-| Supervisor | Inventory, Outbound, Attendance Validation |
-| Accountant | Inventory, Inbound, Outbound, Attendance, Payroll, Reports |
-| Senior Manager | Inventory, Outbound, AI Forecasting, Reports |
+## Project Structure
 
-## Quick Start
+```text
+src/main/java/com/group100/wms
+|-- core          # config, DB connection, session, audit logging
+|-- model         # domain models
+|-- repository    # MySQL data access
+|-- service       # business workflows
+|-- ui            # JavaFX controllers
+`-- util          # validation, hashing, PDF/Excel export
 
-Prerequisites: JDK 17 LTS, MySQL 8.0, Python 3.10
+src/main/resources
+|-- fxml          # JavaFX screens
+|-- css           # UI styles
+`-- images        # application assets
 
-### Run the application
-`powershell
-C:\Users\Dev\Downloads\OpenJDK17U-jdk_x64_windows_hotspot_17.0.18_8.msi = "C:\Program Files\Eclipse Adoptium\jdk-17.0.18.8-hotspot"
+database
+|-- migrations    # setup/update scripts
+`-- schema        # individual table scripts
+
+ai-module         # lightweight forecasting prototype helpers
+docs              # completion/status notes
+```
+## Setup
+
+Prerequisites:
+
+- JDK 17
+- MySQL 8.0
+- Maven Wrapper included in the project
+- Python 3.10+ only if running the optional AI helper scripts
+
+Create and prepare the database:
+
+```sql
+CREATE DATABASE IF NOT EXISTS group100_wms;
+```
+
+Run the SQL scripts in this order:
+
+```text
+database/migrations/V1_0_0__initial_schema.sql
+database/migrations/V1_2_0__add_inter_warehouse_transfer.sql
+database/migrations/V1_3_0__align_live_completion_schema.sql
+```
+
+Configure database credentials using environment variables if your local credentials are not the defaults:
+
+```powershell
+$env:WMS_DB_HOST="127.0.0.1"
+$env:WMS_DB_PORT="3306"
+$env:WMS_DB_NAME="group100_wms"
+$env:WMS_DB_USER="root"
+$env:WMS_DB_PASSWORD="root"
+```
+
+Run the app:
+
+```powershell
 .\mvnw.cmd javafx:run
-`
+```
 
-### Login credentials (all use password123)
-- admin / password123
-- manager / password123
-- supervisor / password123
-- accountant / password123
-- srmanager / password123
+Run verification:
 
-## Technology Stack
+```powershell
+.\mvnw.cmd clean test
+```
 
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| Frontend | JavaFX | 17 |
-| Backend | Java | 17 LTS |
-| Database | MySQL | 8.0 |
-| AI/ML | Python + statsmodels | 3.10 / 0.14.1 |
-| Connection Pool | HikariCP | 5.1.0 |
-| Password Security | jBCrypt | 0.4 |
-| PDF Export | iText | 7.2.5 |
-| Excel Export | Apache POI | 5.2.5 |
-| Biometric | ZKTeco SDK | 3.0 |
-| Build Tool | Maven | 3.9.6 |
-| CI/CD | GitHub Actions | - |
+## Current Verification
 
-## Key Algorithms
+- Clean Maven compile: passed
+- Unit tests: passed
+- DB integration test shells: present but disabled by default because they require a seeded local MySQL database
+- Live local database checked separately through MySQL Workbench/CLI
 
-FIFO Inventory Issuing - Batches queried by receipt_date ASC, deducted sequentially.
-ARIMA Demand Forecasting - AIC grid search, 4-week forward forecast per SKU.
-Payroll Calculation - Base salary x working days, overtime x1.5, EPF 8%/12%, ETF 3%.
+## Scope Note
 
-## License
+Hardware biometric device integration is treated as future scope. The current completed app focuses on the JavaFX desktop WMS, database-backed warehouse workflows, payroll/attendance, reporting, and forecasting dashboard/workflow.
 
-Academic use - PUSL2021 Computing Group Project, Plymouth University / NSBM Green University.
+## Portfolio Summary
+
+Database-backed JavaFX desktop WMS with 18 MySQL tables, 800 item records, 100 employee records, 31k+ attendance records, payroll, FIFO inventory, inbound/outbound stock workflows, audit logging, PDF/Excel exports, and forecasting history/dashboard support.

@@ -51,9 +51,10 @@
                 <padding><Insets top="12"/></padding>
                 <HBox spacing="10" alignment="CENTER_RIGHT">
                     <Button text="&#x1F4E4;  Send Today to Admin" style="-fx-background-color:#8e44ad;-fx-text-fill:white;-fx-background-radius:6;-fx-padding:6 14;-fx-font-weight:bold;" onAction="#onSendTodayToAdmin"/>
-                    <Button text="&#x1F4C4;  Export PDF" styleClass="btn-primary" onAction="#onExportDailyPdf"/>
+                    <Button text="PDF" styleClass="btn-primary" onAction="#onExportDailyPdf"/>
                 </HBox>
                 <TableView fx:id="tblAttendance" VBox.vgrow="ALWAYS" styleClass="table-view">
+        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                     <columns>
                         <TableColumn fx:id="colEmpId"    text="ID"            prefWidth="55"/>
                         <TableColumn fx:id="colName"     text="Name"          prefWidth="180"/>
@@ -73,10 +74,11 @@
             <VBox spacing="10">
                 <padding><Insets top="12"/></padding>
                 <HBox spacing="10" alignment="CENTER_RIGHT">
-                    <Button text="&#x1F4CA;  Export Excel" styleClass="btn-success" onAction="#onExportMonthlyExcel"/>
+                    <Button text="Excel" styleClass="btn-success" onAction="#onExportMonthlyExcel"/>
                     <Button text="&#x1F4E4;  Submit to Admin" style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-background-radius:6;-fx-padding:6 14;-fx-font-weight:bold;" onAction="#onSubmitToAdmin"/>
                 </HBox>
                 <TableView fx:id="tblSummary" VBox.vgrow="ALWAYS" styleClass="table-view">
+        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
                     <columns>
                         <TableColumn fx:id="colSumName"    text="Employee"     prefWidth="200"/>
                         <TableColumn fx:id="colSumSection" text="Section"      prefWidth="90"/>

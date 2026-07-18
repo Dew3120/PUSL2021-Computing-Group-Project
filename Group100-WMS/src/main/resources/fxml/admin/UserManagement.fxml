@@ -3,27 +3,42 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" styleClass="content-pane"
+<VBox spacing="18" styleClass="workspace"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.group100.wms.ui.admin.UserManagementController">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <padding><Insets top="28" right="34" bottom="30" left="34"/></padding>
 
-    <Label text="User Management" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
-
-    <HBox spacing="15" alignment="CENTER_LEFT">
-        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
-            <Label text="Total Users" styleClass="kpi-title"/>
-            <Label fx:id="lblTotalUsers" text="--" styleClass="kpi-value"/>
+    <HBox alignment="CENTER_LEFT" spacing="18" styleClass="module-header">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="ADMIN" styleClass="module-kicker"/>
+            <Label text="User Management" styleClass="module-title"/>
+            <Label text="System accounts, role assignments and user profile information." styleClass="module-subtitle"/>
         </VBox>
-        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
-            <Label text="Active" styleClass="kpi-title"/>
-            <Label fx:id="lblActive" text="--" styleClass="kpi-value" style="-fx-text-fill: #27ae60;"/>
+        <Label text="Role based access" styleClass="module-chip"/>
+    </HBox>
+
+    <HBox spacing="14" alignment="CENTER_LEFT">
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="TOTAL USERS" styleClass="metric-label"/>
+            <Label fx:id="lblTotalUsers" text="--" styleClass="metric-value"/>
+        </VBox>
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="ACTIVE USERS" styleClass="metric-label"/>
+            <Label fx:id="lblActive" text="--" styleClass="metric-value-success"/>
         </VBox>
     </HBox>
 
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-        <FlowPane fx:id="userCardsPane" hgap="20" vgap="20">
-            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-        </FlowPane>
-    </ScrollPane>
+    <VBox styleClass="table-shell" VBox.vgrow="ALWAYS">
+        <HBox styleClass="table-titlebar">
+            <VBox spacing="2">
+                <Label text="Account Cards" styleClass="table-title"/>
+                <Label text="User identity, department, skills, availability and emergency details." styleClass="table-caption"/>
+            </VBox>
+        </HBox>
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+            <FlowPane fx:id="userCardsPane" hgap="18" vgap="18">
+                <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
+            </FlowPane>
+        </ScrollPane>
+    </VBox>
 </VBox>

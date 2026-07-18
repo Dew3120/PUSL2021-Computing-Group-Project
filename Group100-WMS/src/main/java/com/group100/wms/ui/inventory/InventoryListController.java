@@ -1,4 +1,3 @@
-```java id="p8xk21"
 package com.group100.wms.ui.inventory;
 
 import com.group100.wms.core.DatabaseConnection;
@@ -141,4 +140,3 @@ public class InventoryListController {
         ExcelExporter.export("Inventory", headers, data, itemTable.getScene().getWindow());
     }
 }
-```

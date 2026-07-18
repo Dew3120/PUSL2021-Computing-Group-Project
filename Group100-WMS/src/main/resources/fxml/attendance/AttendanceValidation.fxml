@@ -28,6 +28,7 @@
     </HBox>
 
     <TableView fx:id="validationTable" VBox.vgrow="ALWAYS">
+        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
         <columns>
             <TableColumn fx:id="colId"         text="ID"         prefWidth="50"/>
             <TableColumn fx:id="colEmployeeId" text="Emp ID"     prefWidth="65"/>

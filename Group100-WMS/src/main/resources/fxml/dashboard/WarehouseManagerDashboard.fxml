@@ -5,27 +5,34 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.group100.wms.ui.dashboard.WarehouseManagerDashboardController"
-      spacing="20">
-    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
-    <Label text="Warehouse Manager Dashboard" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
-    <HBox spacing="16">
-        <VBox styleClass="kpi-card" spacing="8" prefWidth="180">
-            <Label text="Total Items" style="-fx-text-fill: #7f8c8d;"/>
-            <Label fx:id="totalItemsLabel" text="—" style="-fx-font-size: 28; -fx-font-weight: bold;"/>
+      spacing="18" styleClass="workspace">
+    <padding><Insets top="28" right="34" bottom="30" left="34"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="18" styleClass="module-header">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="WAREHOUSE OPS" styleClass="module-kicker"/>
+            <Label text="Warehouse Manager Dashboard" styleClass="module-title"/>
+            <Label text="Stock control, inbound receiving and outbound issuing summary." styleClass="module-subtitle"/>
         </VBox>
-        <VBox styleClass="kpi-card" spacing="8" prefWidth="180">
-            <Label text="Low Stock" style="-fx-text-fill: #e74c3c;"/>
-            <Label fx:id="lowStockLabel" text="—" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+        <Button text="Refresh" onAction="#handleRefresh" styleClass="btn-primary"/>
+    </HBox>
+
+    <HBox spacing="14" alignment="CENTER_LEFT">
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS"><Label text="TOTAL ITEMS" styleClass="metric-label"/><Label fx:id="totalItemsLabel" text="--" styleClass="metric-value"/></VBox>
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS"><Label text="LOW STOCK" styleClass="metric-label"/><Label fx:id="lowStockLabel" text="--" styleClass="metric-value-danger"/></VBox>
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS"><Label text="TOTAL GRNS" styleClass="metric-label"/><Label fx:id="totalGrnsLabel" text="--" styleClass="metric-value-success"/></VBox>
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS"><Label text="TOTAL GINS" styleClass="metric-label"/><Label fx:id="totalGinsLabel" text="--" styleClass="metric-value-info"/></VBox>
+    </HBox>
+
+    <HBox spacing="16" VBox.vgrow="ALWAYS">
+        <VBox styleClass="dashboard-panel" spacing="10" HBox.hgrow="ALWAYS">
+            <Label text="Operational Coverage" styleClass="dashboard-panel-title"/>
+            <Label text="Warehouse managers can monitor stock health and movement volume before drilling into inventory, purchase orders or goods issue notes." styleClass="dashboard-panel-copy" wrapText="true"/>
         </VBox>
-        <VBox styleClass="kpi-card" spacing="8" prefWidth="180">
-            <Label text="Total GRNs" style="-fx-text-fill: #7f8c8d;"/>
-            <Label fx:id="totalGrnsLabel" text="—" style="-fx-font-size: 28; -fx-font-weight: bold;"/>
-        </VBox>
-        <VBox styleClass="kpi-card" spacing="8" prefWidth="180">
-            <Label text="Total GINs" style="-fx-text-fill: #7f8c8d;"/>
-            <Label fx:id="totalGinsLabel" text="—" style="-fx-font-size: 28; -fx-font-weight: bold;"/>
+        <VBox styleClass="dashboard-panel" spacing="10" HBox.hgrow="ALWAYS">
+            <Label text="Portfolio Notes" styleClass="dashboard-panel-title"/>
+            <Label text="This view is connected to the same MySQL-backed modules shown in inventory, inbound, outbound, attendance, payroll and forecasting." styleClass="dashboard-panel-copy" wrapText="true"/>
+            <Label fx:id="statusLabel" text="" styleClass="status-text"/>
         </VBox>
     </HBox>
-    <Button text="Refresh" onAction="#handleRefresh"/>
-    <Label fx:id="statusLabel" text=""/>
 </VBox>

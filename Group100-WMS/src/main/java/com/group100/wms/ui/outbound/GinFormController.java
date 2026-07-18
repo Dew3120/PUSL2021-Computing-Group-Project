@@ -1,4 +1,3 @@
-```java id="k3y1mf"
 package com.group100.wms.ui.outbound;
 
 import com.group100.wms.core.SessionManager;
@@ -7,9 +6,11 @@ import com.group100.wms.exception.StockShortageException;
 import com.group100.wms.model.GinItem;
 import com.group100.wms.model.GoodsIssueNote;
 import com.group100.wms.model.Item;
+import com.group100.wms.model.Warehouse;
 import com.group100.wms.repository.BatchRepository;
 import com.group100.wms.repository.GinRepository;
 import com.group100.wms.repository.ItemRepository;
+import com.group100.wms.repository.WarehouseRepository;
 import com.group100.wms.service.InventoryService;
 import com.group100.wms.service.OutboundService;
 import javafx.collections.FXCollections;
@@ -19,67 +20,61 @@ import javafx.scene.control.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// OOP Concepts Used:
-// Encapsulation - UI fields, lists, and methods encapsulate the form’s functionality.
-// Abstraction - Controller abstracts stock checks, GIN creation, and business logic.
-// Inheritance - JavaFX UI components inherit from base classes like TextField, ComboBox, ListView, Label.
-// Polymorphism - Alert, TableView, and service method calls demonstrate polymorphic behavior.
-
 public class GinFormController {
 
-    // TextField to input destination/issued-to information
+    @FXML private ComboBox<Warehouse> warehouseCombo;
     @FXML private TextField issuedToField;
-
-    // ComboBox to select items for the GIN
     @FXML private ComboBox<Item> itemCombo;
-
-    // TextField to input quantity for the selected item
     @FXML private TextField quantityField;
-
-    // ListView to display added items in the current GIN
     @FXML private ListView<String> itemListView;
-
-    // TextArea for additional notes (optional)
     @FXML private TextArea notesArea;
-
-    // Label for displaying status messages, warnings, or errors
     @FXML private Label statusLabel;
 
-    // Service for inventory operations like checking stock
     private final InventoryService inventoryService =
             new InventoryService(new ItemRepository(), new BatchRepository());
-
-    // Service for outbound operations such as issuing GINs
     private final OutboundService outboundService = new OutboundService(
             new GinRepository(), inventoryService);
-
-    // Repository to fetch item data
     private final ItemRepository itemRepository = new ItemRepository();
-
-    // List storing GinItem objects representing items added to the current GIN
+    private final WarehouseRepository warehouseRepository = new WarehouseRepository();
     private final List<GinItem> ginItems = new ArrayList<>();
 
-    // Initializes the form by loading available items into the ComboBox
     @FXML
-    public void initialize() { loadItems(); }
+    public void initialize() {
+        loadWarehouses();
+        warehouseCombo.valueProperty().addListener((obs, oldValue, newValue) -> loadItems(newValue));
+    }
 
-    // Loads all items from the database into the itemCombo ComboBox
-    private void loadItems() {
+    private void loadWarehouses() {
         try {
-            List<Item> items = itemRepository.findAll();
+            List<Warehouse> warehouses = warehouseRepository.findAll();
+            warehouseCombo.setItems(FXCollections.observableArrayList(warehouses));
+            if (!warehouses.isEmpty()) warehouseCombo.setValue(warehouses.get(0));
+        } catch (DatabaseException e) {
+            statusLabel.setText("Error loading warehouses: " + e.getMessage());
+        }
+    }
+
+    private void loadItems(Warehouse warehouse) {
+        try {
+            List<Item> items = warehouse == null
+                    ? itemRepository.findAll()
+                    : itemRepository.findByWarehouseId(warehouse.getId());
             itemCombo.setItems(FXCollections.observableArrayList(items));
+            itemCombo.setValue(null);
+            ginItems.clear();
+            itemListView.getItems().clear();
         } catch (DatabaseException e) {
             statusLabel.setText("Error loading items: " + e.getMessage());
         }
     }
 
-    // Handles adding an item to the GIN, including stock check and shortage warning
     @FXML
     private void handleAddItem() {
+        Warehouse warehouse = warehouseCombo.getValue();
         Item item = itemCombo.getValue();
         String qtyText = quantityField.getText().trim();
-        if (item == null || qtyText.isBlank()) {
-            statusLabel.setText("Select item and enter quantity.");
+        if (warehouse == null || item == null || qtyText.isBlank()) {
+            statusLabel.setText("Select warehouse, item, and quantity.");
             return;
         }
         try {
@@ -89,42 +84,26 @@ public class GinFormController {
                 return;
             }
 
-            // AUTO SHORTAGE DETECTION — check stock BEFORE adding
-            int available = inventoryService.getStockLevel(item.getId());
-
-            // Calculate already-added quantity for this item in the current GIN
+            int available = inventoryService.getStockLevel(item.getId(), warehouse.getId());
             int alreadyAdded = ginItems.stream()
                     .filter(g -> g.getItemId() == item.getId())
                     .mapToInt(GinItem::getQuantityIssued)
                     .sum();
-
             int totalNeeded = alreadyAdded + qty;
 
             if (totalNeeded > available) {
                 statusLabel.setText("SHORTAGE WARNING: " + item.getName()
-                        + " — requested total: " + totalNeeded
+                        + " requested total: " + totalNeeded
                         + ", available: " + available
-                        + ". Short by " + (totalNeeded - available) + " units.");
+                        + ", short by " + (totalNeeded - available) + " units.");
                 statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-
-                // Show confirmation dialog
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Stock Shortage Detected");
-                alert.setHeaderText("Insufficient stock for " + item.getName());
-                alert.setContentText("Requested: " + totalNeeded
-                        + "\nAvailable: " + available
-                        + "\nShort by: " + (totalNeeded - available)
-                        + "\n\nDo you still want to add this item?");
-                if (alert.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
-                    return;
-                }
-            } else {
-                statusLabel.setStyle("");
-                statusLabel.setText("Stock OK: " + item.getName()
-                        + " — available: " + available + ", requesting: " + totalNeeded);
+                return;
             }
 
-            // Add item to the GIN list and display in the ListView
+            statusLabel.setStyle("");
+            statusLabel.setText("Stock OK: " + item.getName()
+                    + " available: " + available + ", requesting: " + totalNeeded);
+
             GinItem ginItem = new GinItem();
             ginItem.setItemId(item.getId());
             ginItem.setQuantityIssued(qty);
@@ -140,20 +119,21 @@ public class GinFormController {
         }
     }
 
-    // Handles saving the GIN, issuing the goods via the OutboundService
     @FXML
     private void handleSave() {
+        Warehouse warehouse = warehouseCombo.getValue();
         String issuedTo = issuedToField.getText().trim();
-        if (issuedTo.isBlank() || ginItems.isEmpty()) {
-            statusLabel.setText("Fill issued to and add at least one item.");
+        if (warehouse == null || issuedTo.isBlank() || ginItems.isEmpty()) {
+            statusLabel.setText("Select warehouse, fill issued to, and add at least one item.");
             return;
         }
         try {
             GoodsIssueNote gin = new GoodsIssueNote();
-            gin.setWarehouseId(SessionManager.getCurrentUser().getId());
+            gin.setWarehouseId(warehouse.getId());
             gin.setDestination(issuedTo);
             gin.setDestType("PRODUCTION");
-            gin.setIssuedBy(SessionManager.getCurrentUser().getId());
+            gin.setIssuedBy(SessionManager.getCurrentUser() != null
+                    ? SessionManager.getCurrentUser().getId() : 0);
             gin.setStatus("PENDING");
             outboundService.issueGoods(gin, ginItems);
             statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
@@ -170,7 +150,6 @@ public class GinFormController {
         }
     }
 
-    // Clears all form fields, resets the ListView and status label
     @FXML
     private void handleClear() {
         issuedToField.clear();
@@ -183,4 +162,3 @@ public class GinFormController {
         statusLabel.setText("");
     }
 }
-```

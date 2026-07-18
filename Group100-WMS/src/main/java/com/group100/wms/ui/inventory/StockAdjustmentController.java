@@ -1,4 +1,3 @@
-```java id="v7n2kp"
 package com.group100.wms.ui.inventory;
 
 import com.group100.wms.core.AuditLogger;
@@ -134,4 +133,3 @@ public class StockAdjustmentController {
         statusLabel.setText("");
     }
 }
-```

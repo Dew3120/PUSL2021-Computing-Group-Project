@@ -16,6 +16,7 @@
                 style="-fx-background-color: #8e44ad; -fx-text-fill: white;"/>
     </HBox>
     <TableView fx:id="detailTable" VBox.vgrow="ALWAYS">
+        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
         <columns>
             <TableColumn fx:id="colDate"  text="Date"     prefWidth="120"/>
             <TableColumn fx:id="colQty"   text="Qty"      prefWidth="80"/>

@@ -19,7 +19,7 @@ public class RoleRepository {
 
     // Finds a role by its unique ID. Returns an Optional<Role> which may be empty if no role is found
     public Optional<Role> findById(int id) throws DatabaseException {
-        String sql = "SELECT * FROM ROLES WHERE id = ?";
+        String sql = "SELECT role_id, role_name FROM roles WHERE role_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -34,7 +34,7 @@ public class RoleRepository {
 
     // Finds a role by its role name. Returns an Optional<Role> which may be empty if no role is found
     public Optional<Role> findByName(String roleName) throws DatabaseException {
-        String sql = "SELECT * FROM ROLES WHERE role_name = ?";
+        String sql = "SELECT role_id, role_name FROM roles WHERE role_name = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, roleName);
@@ -50,7 +50,7 @@ public class RoleRepository {
     // Retrieves all roles from the database and returns them as a List<Role>
     public List<Role> findAll() throws DatabaseException {
         List<Role> list = new ArrayList<>();
-        String sql = "SELECT * FROM ROLES ORDER BY id";
+        String sql = "SELECT role_id, role_name FROM roles ORDER BY role_id";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -64,9 +64,9 @@ public class RoleRepository {
     // Maps a ResultSet row to a Role object
     private Role mapRow(ResultSet rs) throws SQLException {
         return new Role(
-                rs.getInt("id"),
+                rs.getInt("role_id"),
                 rs.getString("role_name"),
-                rs.getString("description")
+                null
         );
     }
 }

@@ -5,13 +5,15 @@
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.group100.wms.ui.outbound.GinFormController"
-      spacing="14" maxWidth="520">
+      spacing="14" maxWidth="560">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
     <Label text="Issue Goods (GIN)" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <Label text="Source Warehouse"/>
+    <ComboBox fx:id="warehouseCombo" prefWidth="260"/>
     <Label text="Issued To"/>
     <TextField fx:id="issuedToField" promptText="Department / Person"/>
     <HBox spacing="8" alignment="CENTER_LEFT">
-        <ComboBox fx:id="itemCombo" prefWidth="220"/>
+        <ComboBox fx:id="itemCombo" prefWidth="260"/>
         <TextField fx:id="quantityField" promptText="Qty" prefWidth="80"/>
         <Button text="Add Item" onAction="#handleAddItem"/>
     </HBox>

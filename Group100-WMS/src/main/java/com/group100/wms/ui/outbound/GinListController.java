@@ -1,4 +1,3 @@
-```java id="q2v9ld"
 package com.group100.wms.ui.outbound;
 
 import com.group100.wms.core.DatabaseConnection;
@@ -135,4 +134,3 @@ public class GinListController {
         public String warehouseName, destination, destType, issuedDate, status;
     }
 }
-```

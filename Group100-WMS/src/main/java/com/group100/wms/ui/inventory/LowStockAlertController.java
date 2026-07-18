@@ -1,4 +1,3 @@
-```java id="m4z8qx"
 package com.group100.wms.ui.inventory;
 
 import com.group100.wms.exception.DatabaseException;
@@ -67,4 +66,3 @@ public class LowStockAlertController {
     @FXML
     private void handleRefresh() { loadLowStock(); }
 }
-```

@@ -71,10 +71,13 @@ public class ForecastRepository {
                 "confidence, generated_date, method) VALUES (?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            double confidence = forecast.getConfidence() > 0
+                    ? forecast.getConfidence()
+                    : forecast.getConfidenceLower();
             ps.setInt(1, forecast.getItemId());
             ps.setInt(2, forecast.getWarehouseId());
             ps.setInt(3, forecast.getForecastedQuantity());
-            ps.setDouble(4, forecast.getConfidenceLower());
+            ps.setDouble(4, confidence);
             ps.setDate(5, forecast.getForecastDate() != null
                     ? java.sql.Date.valueOf(forecast.getForecastDate()) : null);
             ps.setString(6, forecast.getModelUsed());
@@ -103,14 +106,20 @@ public class ForecastRepository {
     // Maps a database result set row to a Forecast model object
     private Forecast mapRow(ResultSet rs) throws SQLException {
         java.sql.Date gd = rs.getDate("generated_date");
-        return new Forecast(
+        double confidence = rs.getDouble("confidence");
+        Forecast forecast = new Forecast(
                 rs.getInt("forecast_id"),
                 rs.getInt("item_id"),
                 rs.getInt("warehouse_id"),
                 gd != null ? gd.toLocalDate() : null,
                 rs.getInt("predicted_qty"),
-                rs.getDouble("confidence"),
-                rs.getDouble("confidence"),
+                confidence,
+                confidence,
                 rs.getString("method"));
+        forecast.setPredictedQty(rs.getDouble("predicted_qty"));
+        forecast.setConfidence(confidence);
+        forecast.setGeneratedDate(gd != null ? gd.toLocalDate() : null);
+        forecast.setMethod(rs.getString("method"));
+        return forecast;
     }
 }

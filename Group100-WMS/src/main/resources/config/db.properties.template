@@ -1,0 +1,8 @@
+db.host=127.0.0.1
+db.port=3306
+db.name=group100_wms
+db.username=root
+db.password=root
+
+# The Java app also accepts environment variables:
+# WMS_DB_HOST, WMS_DB_PORT, WMS_DB_NAME, WMS_DB_USER, WMS_DB_PASSWORD

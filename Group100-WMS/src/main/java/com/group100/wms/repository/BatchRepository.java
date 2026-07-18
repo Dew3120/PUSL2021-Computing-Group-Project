@@ -12,22 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repository class for handling Batch-related database operations.
- *
- * OOP Concepts Used:
- * - Encapsulation: Database access logic is contained within this class.
- * - Abstraction: Provides simplified methods to interact with batch data without exposing SQL details.
- * - Polymorphism: Demonstrated through exception handling and method behaviors.
- * - No direct inheritance used in this class.
- */
 public class BatchRepository {
 
-    // Retrieves batches for a given item using FIFO (First-In-First-Out) where stock is still available
     public List<Batch> findByItemFIFO(int itemId) throws DatabaseException {
         List<Batch> list = new ArrayList<>();
         String sql = "SELECT batch_id, po_id, item_id, quantity, available_qty, unit_cost, receipt_date " +
-                "FROM batches WHERE item_id = ? AND available_qty > 0 ORDER BY receipt_date ASC";
+                "FROM batches WHERE item_id = ? AND available_qty > 0 ORDER BY receipt_date ASC, batch_id ASC";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, itemId);
@@ -40,11 +30,10 @@ public class BatchRepository {
         return list;
     }
 
-    // Retrieves all batches for a given item regardless of available quantity
     public List<Batch> findByItem(int itemId) throws DatabaseException {
         List<Batch> list = new ArrayList<>();
         String sql = "SELECT batch_id, po_id, item_id, quantity, available_qty, unit_cost, receipt_date " +
-                "FROM batches WHERE item_id = ? ORDER BY receipt_date ASC";
+                "FROM batches WHERE item_id = ? ORDER BY receipt_date ASC, batch_id ASC";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, itemId);
@@ -57,7 +46,6 @@ public class BatchRepository {
         return list;
     }
 
-    // Finds a specific batch by its ID
     public Optional<Batch> findById(int batchId) throws DatabaseException {
         String sql = "SELECT batch_id, po_id, item_id, quantity, available_qty, unit_cost, receipt_date " +
                 "FROM batches WHERE batch_id = ?";
@@ -72,7 +60,7 @@ public class BatchRepository {
         }
         return Optional.empty();
     }
-    // Saves a new batch record into the database and retrieves the generated ID
+
     public void save(Batch batch) throws DatabaseException {
         String sql = "INSERT INTO batches (po_id, item_id, quantity, available_qty, unit_cost, receipt_date) " +
                 "VALUES (?,?,?,?,?,?)";
@@ -93,7 +81,6 @@ public class BatchRepository {
         }
     }
 
-    // Updates the available quantity of a specific batch
     public void updateAvailableQty(int batchId, int newQty) throws DatabaseException {
         String sql = "UPDATE batches SET available_qty = ? WHERE batch_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -106,8 +93,8 @@ public class BatchRepository {
         }
     }
 
-    // Maps a database result set row to a Batch object
     private Batch mapRow(ResultSet rs) throws java.sql.SQLException {
+        Date receiptDate = rs.getDate("receipt_date");
         return new Batch(
                 rs.getInt("batch_id"),
                 rs.getInt("po_id"),
@@ -115,6 +102,6 @@ public class BatchRepository {
                 rs.getInt("quantity"),
                 rs.getInt("available_qty"),
                 rs.getDouble("unit_cost"),
-                rs.getDate("receipt_date").toLocalDate());
+                receiptDate != null ? receiptDate.toLocalDate() : null);
     }
 }

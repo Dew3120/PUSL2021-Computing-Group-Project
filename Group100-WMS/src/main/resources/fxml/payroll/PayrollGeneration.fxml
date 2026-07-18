@@ -3,29 +3,52 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.group100.wms.ui.payroll.PayrollGenerationController"
-      spacing="12">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-    <Label text="Payroll Generation" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
-    <HBox spacing="8" alignment="CENTER_LEFT">
-        <Label text="Month:"/>
-        <ComboBox fx:id="monthCombo" prefWidth="80"/>
-        <Label text="Year:"/>
-        <ComboBox fx:id="yearCombo" prefWidth="90"/>
-        <Button text="Generate" onAction="#handleGenerate"
-                style="-fx-background-color: #2980b9; -fx-text-fill: white;"/>
-        <Button text="Load Existing" onAction="#handleLoad"/>
+<VBox spacing="18" styleClass="workspace"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.group100.wms.ui.payroll.PayrollGenerationController">
+    <padding><Insets top="28" right="34" bottom="30" left="34"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="18" styleClass="module-header">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="PAYROLL" styleClass="module-kicker"/>
+            <Label text="Payroll Generation" styleClass="module-title"/>
+            <Label text="Monthly payroll generation based on attendance, rates, overtime and statutory deductions." styleClass="module-subtitle"/>
+        </VBox>
+        <Label text="Monthly run" styleClass="module-chip"/>
     </HBox>
-    <TableView fx:id="payrollTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="colEmpId"  text="Emp ID"     prefWidth="80"/>
-            <TableColumn fx:id="colBasic"  text="Basic"      prefWidth="110"/>
-            <TableColumn fx:id="colOT"     text="OT Pay"     prefWidth="110"/>
-            <TableColumn fx:id="colEpf"    text="EPF (Emp)"  prefWidth="110"/>
-            <TableColumn fx:id="colNet"    text="Net Salary" prefWidth="120"/>
-            <TableColumn fx:id="colStatus" text="Status"     prefWidth="100"/>
-        </columns>
-    </TableView>
-    <Label fx:id="statusLabel" text=""/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="action-panel">
+        <VBox styleClass="field-group">
+            <Label text="Month" styleClass="field-label"/>
+            <ComboBox fx:id="monthCombo" prefWidth="120"/>
+        </VBox>
+        <VBox styleClass="field-group">
+            <Label text="Year" styleClass="field-label"/>
+            <ComboBox fx:id="yearCombo" prefWidth="120"/>
+        </VBox>
+        <Button text="Generate Payroll" onAction="#handleGenerate" styleClass="btn-primary"/>
+        <Button text="Load Existing" onAction="#handleLoad" styleClass="btn-outline"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statusLabel" text="" styleClass="status-text"/>
+    </HBox>
+
+    <VBox styleClass="table-shell" VBox.vgrow="ALWAYS">
+        <HBox styleClass="table-titlebar">
+            <VBox spacing="2">
+                <Label text="Payroll Calculation Preview" styleClass="table-title"/>
+                <Label text="Basic pay, overtime, EPF deduction, net salary and processing status." styleClass="table-caption"/>
+            </VBox>
+        </HBox>
+        <TableView fx:id="payrollTable" VBox.vgrow="ALWAYS">
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+            <columns>
+                <TableColumn fx:id="colEmpId"  text="Emp ID"     prefWidth="90"/>
+                <TableColumn fx:id="colBasic"  text="Basic"      prefWidth="130"/>
+                <TableColumn fx:id="colOT"     text="OT Pay"     prefWidth="130"/>
+                <TableColumn fx:id="colEpf"    text="EPF (Emp)"  prefWidth="130"/>
+                <TableColumn fx:id="colNet"    text="Net Salary" prefWidth="140"/>
+                <TableColumn fx:id="colStatus" text="Status"     prefWidth="120"/>
+            </columns>
+        </TableView>
+    </VBox>
 </VBox>

@@ -6,6 +6,7 @@ import com.group100.wms.model.User;
 import com.group100.wms.repository.UserRepository;
 import com.group100.wms.service.AuthService;
 import com.group100.wms.ui.shared.MainLayoutController;
+import com.group100.wms.ui.shared.SceneStyles;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -58,13 +59,7 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/shared/MainLayout.fxml"));
             Stage stage = (Stage) usernameField.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 1200, 750);
-            scene.getStylesheets().addAll(
-                    getClass().getResource("/css/global.css").toExternalForm(),
-                    getClass().getResource("/css/dashboard.css").toExternalForm(),
-                    getClass().getResource("/css/tables.css").toExternalForm(),
-                    getClass().getResource("/css/forms.css").toExternalForm()
-            );
+            Scene scene = SceneStyles.createScene(loader.load(), SceneStyles.APP_WIDTH, SceneStyles.APP_HEIGHT, getClass());
             MainLayoutController controller = loader.getController();
             scene.setUserData(controller);
             stage.setScene(scene);

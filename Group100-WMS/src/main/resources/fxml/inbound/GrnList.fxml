@@ -10,6 +10,7 @@
     <Label text="Goods Received Notes" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
     <Button text="Refresh" onAction="#handleRefresh" prefWidth="100"/>
     <TableView fx:id="grnTable" VBox.vgrow="ALWAYS">
+        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
         <columns>
             <TableColumn fx:id="colId"           text="ID"           prefWidth="60"/>
             <TableColumn fx:id="colGrnNumber"    text="GRN Number"   prefWidth="180"/>

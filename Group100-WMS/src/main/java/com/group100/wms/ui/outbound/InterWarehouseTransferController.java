@@ -3,6 +3,7 @@ package com.group100.wms.ui.outbound;
 import com.group100.wms.exception.DatabaseException;
 import com.group100.wms.exception.StockShortageException;
 import com.group100.wms.model.Batch;
+import com.group100.wms.model.GinItem;
 import com.group100.wms.model.Item;
 import com.group100.wms.model.Warehouse;
 import com.group100.wms.repository.BatchRepository;
@@ -16,74 +17,50 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Controller for handling inter-warehouse stock transfers.
- *
- * OOP Concepts Used:
- * - Encapsulation: UI components and transfer logic are contained within this class.
- * - Abstraction: Uses service and repository layers to hide business and database logic.
- * - Polymorphism: Demonstrated via exception handling (different exception types handled differently).
- * - No direct inheritance defined in this class.
- */
 public class InterWarehouseTransferController {
 
-    // ComboBox for selecting source warehouse
     @FXML private ComboBox<Warehouse> fromWarehouseCombo;
-
-    // ComboBox for selecting destination warehouse
     @FXML private ComboBox<Warehouse> toWarehouseCombo;
-
-    // ComboBox for selecting item to transfer
     @FXML private ComboBox<Item> itemCombo;
-
-    // TextField for entering transfer quantity
     @FXML private TextField quantityField;
-
-    // Label for displaying status messages
     @FXML private Label statusLabel;
 
-    // Service layer for inventory operations such as stock deduction
     private final InventoryService inventoryService =
             new InventoryService(new ItemRepository(), new BatchRepository());
-
-    // Repository for fetching warehouse data
     private final WarehouseRepository warehouseRepository = new WarehouseRepository();
-
-    // Repository for fetching item data
     private final ItemRepository itemRepository = new ItemRepository();
-
-    // Repository for saving batch data
     private final BatchRepository batchRepository = new BatchRepository();
 
-    // Initializes the controller by loading warehouses and items into UI components
     @FXML
     public void initialize() {
         loadWarehouses();
-        loadItems();
+        fromWarehouseCombo.valueProperty().addListener((obs, oldValue, newValue) -> loadItems(newValue));
     }
 
-    // Loads all warehouses into both source and destination ComboBoxes
     private void loadWarehouses() {
         try {
             List<Warehouse> warehouses = warehouseRepository.findAll();
             fromWarehouseCombo.setItems(FXCollections.observableArrayList(warehouses));
             toWarehouseCombo.setItems(FXCollections.observableArrayList(warehouses));
+            if (!warehouses.isEmpty()) fromWarehouseCombo.setValue(warehouses.get(0));
+            if (warehouses.size() > 1) toWarehouseCombo.setValue(warehouses.get(1));
         } catch (DatabaseException e) {
             statusLabel.setText("Error loading warehouses: " + e.getMessage());
         }
     }
 
-    // Loads all items into the item ComboBox
-    private void loadItems() {
+    private void loadItems(Warehouse warehouse) {
         try {
-            List<Item> items = itemRepository.findAll();
+            List<Item> items = warehouse == null
+                    ? itemRepository.findAll()
+                    : itemRepository.findByWarehouseId(warehouse.getId());
             itemCombo.setItems(FXCollections.observableArrayList(items));
+            itemCombo.setValue(null);
         } catch (DatabaseException e) {
             statusLabel.setText("Error loading items: " + e.getMessage());
         }
     }
 
-    // Handles the transfer process: validates input, deducts stock, and creates a new batch
     @FXML
     private void handleTransfer() {
         Warehouse from = fromWarehouseCombo.getValue();
@@ -91,43 +68,94 @@ public class InterWarehouseTransferController {
         Item item = itemCombo.getValue();
         String qtyText = quantityField.getText().trim();
 
-        if (from == null  to == null  item == null || qtyText.isBlank()) {
+        if (from == null || to == null || item == null || qtyText.isBlank()) {
             statusLabel.setText("Please fill all fields."); return;
         }
         if (from.getId() == to.getId()) {
             statusLabel.setText("Source and destination must differ."); return;
         }
+        if (item.getWarehouseId() != from.getId()) {
+            statusLabel.setText("Selected item does not belong to the source warehouse."); return;
+        }
         try {
             int qty = Integer.parseInt(qtyText);
-            inventoryService.deductStockFifo(item.getId(), from.getId(), qty);
-                    Batch batch = new Batch();
-            batch.setItemId(item.getId());
-            batch.setPoId(0);
-            batch.setQuantity(qty);
-            batch.setAvailableQty(qty);
-            batch.setUnitCost(0.0);
-            batch.setReceiptDate(LocalDate.now());
-            batchRepository.save(batch);
+            if (qty <= 0) {
+                statusLabel.setText("Quantity must be greater than 0."); return;
+            }
 
+            List<GinItem> allocations = inventoryService.deductStockFifo(item.getId(), from.getId(), qty);
+            Item destinationItem = resolveDestinationItem(item, to);
+
+            for (GinItem allocation : allocations) {
+                Batch sourceBatch = batchRepository.findById(allocation.getBatchId())
+                        .orElseThrow(() -> new DatabaseException("Source batch not found: " + allocation.getBatchId()));
+                Batch transferBatch = new Batch();
+                transferBatch.setItemId(destinationItem.getId());
+                transferBatch.setPoId(sourceBatch.getPoId());
+                transferBatch.setQuantity(allocation.getQuantityIssued());
+                transferBatch.setAvailableQty(allocation.getQuantityIssued());
+                transferBatch.setUnitCost(sourceBatch.getUnitCost());
+                transferBatch.setReceiptDate(LocalDate.now());
+                batchRepository.save(transferBatch);
+            }
+
+            statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
             statusLabel.setText("Transferred " + qty + " units of "
-                    + item.getName() + " successfully.");
+                    + item.getName() + " to " + to.getName() + ".");
             quantityField.clear();
         } catch (StockShortageException e) {
+            statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
             statusLabel.setText("Stock shortage: available=" + e.getAvailable());
         } catch (NumberFormatException e) {
             statusLabel.setText("Invalid quantity.");
         } catch (DatabaseException e) {
+            statusLabel.setStyle("-fx-text-fill: red;");
             statusLabel.setText("Error: " + e.getMessage());
         }
     }
 
-    // Clears all input fields and resets the form
+    private Item resolveDestinationItem(Item source, Warehouse destination) throws DatabaseException {
+        return itemRepository.findEquivalentInWarehouse(source, destination.getId())
+                .orElseGet(() -> createDestinationItem(source, destination));
+    }
+
+    private Item createDestinationItem(Item source, Warehouse destination) {
+        try {
+            Item clone = new Item();
+            clone.setSku(buildTransferSku(source, destination.getId()));
+            clone.setName(source.getName());
+            clone.setDescription(source.getDescription());
+            clone.setCategory(source.getCategory());
+            clone.setColour(source.getColour());
+            clone.setUnit(source.getUnit());
+            clone.setWarehouseId(destination.getId());
+            itemRepository.save(clone);
+            return clone;
+        } catch (DatabaseException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private String buildTransferSku(Item source, int warehouseId) throws DatabaseException {
+        String base = "TR" + warehouseId + "-" + source.getId();
+        String sku = base.length() <= 20 ? base : base.substring(0, 20);
+        int suffix = 1;
+        String candidate = sku;
+        while (itemRepository.findBySku(candidate).isPresent()) {
+            String ending = "-" + suffix++;
+            int maxBaseLength = Math.max(1, 20 - ending.length());
+            candidate = sku.substring(0, Math.min(sku.length(), maxBaseLength)) + ending;
+        }
+        return candidate;
+    }
+
     @FXML
     private void handleClear() {
         fromWarehouseCombo.setValue(null);
         toWarehouseCombo.setValue(null);
         itemCombo.setValue(null);
         quantityField.clear();
+        statusLabel.setStyle("");
         statusLabel.setText("");
     }
 }

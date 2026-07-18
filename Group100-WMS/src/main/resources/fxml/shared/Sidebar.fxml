@@ -3,34 +3,42 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
+
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.group100.wms.ui.shared.SidebarController"
-      prefWidth="230" spacing="0"
+      prefWidth="258" spacing="0"
       styleClass="sidebar">
-        <VBox styleClass="sidebar-header" spacing="4" alignment="CENTER">
-                <ImageView fitWidth="160" fitHeight="55" preserveRatio="true">
-                    <image><Image url="@/images/logo2.jpg"/></image>
-                </ImageView>
-                <Label fx:id="usernameLabel" text="User" styleClass="sidebar-logo" style="-fx-font-size:11px;"/>
-                <Label fx:id="roleLabel" text="" styleClass="sidebar-role-label"/>
-        </VBox>
-        <Separator styleClass="sidebar-separator"/>
-        <VBox fx:id="navMenu" spacing="0">
-                <padding><Insets top="8" right="0" bottom="8" left="0"/></padding>
-                <Button fx:id="btnInventory"         text="&#x1F4E6;  Inventory"          onAction="#onInventory"         maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnInbound"           text="&#x1F4E5;  Inbound"            onAction="#onInbound"           maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnOutbound"          text="&#x1F4E4;  Outbound"           onAction="#onOutbound"          maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnAttendance"        text="&#x1F552;  Attendance"         onAction="#onAttendance"        maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnEmployeeDirectory" text="&#x1F465;  Employee Directory" onAction="#onEmployeeDirectory" maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnLeaveRequests"     text="&#x1F4CB;  Leave Requests"     onAction="#onLeaveRequests"     maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnPayroll"           text="&#x1F4B0;  Payroll"            onAction="#onPayroll"           maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnForecasting"       text="&#x1F4C8;  Forecasting"        onAction="#onForecasting"       maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnReports"           text="&#x1F9D1;  Employee Reports"            onAction="#onReports"           maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnAdmin"             text="&#x2699;  Admin"               onAction="#onAdmin"             maxWidth="Infinity" styleClass="sidebar-btn"/>
-                <Button fx:id="btnAuditLog"          text="&#x1F4DC;  Audit Log"          onAction="#onAuditLog"          maxWidth="Infinity" styleClass="sidebar-btn"/>
-        </VBox>
-        <Region VBox.vgrow="ALWAYS"/>
-        <Separator styleClass="sidebar-separator"/>
-        <Button text="&#x1F6AA;  Logout" onAction="#onLogout" maxWidth="Infinity" styleClass="sidebar-btn"/>
+    <VBox styleClass="sidebar-header" spacing="8" alignment="CENTER">
+        <ImageView fitWidth="154" fitHeight="58" preserveRatio="true">
+            <image><Image url="@/images/logo2.jpg"/></image>
+        </ImageView>
+        <Label text="CENTRALIZED WMS" styleClass="sidebar-brand-title"/>
+        <Label text="Warehouse operations suite" styleClass="sidebar-brand-subtitle"/>
+        <Label fx:id="usernameLabel" text="User" styleClass="sidebar-logo"/>
+        <Label fx:id="roleLabel" text="" styleClass="sidebar-role-label"/>
+    </VBox>
+
+    <Separator styleClass="sidebar-separator"/>
+    <Label text="OPERATIONS" styleClass="sidebar-section-label"/>
+    <VBox fx:id="navMenu" spacing="5">
+        <padding><Insets top="0" right="12" bottom="8" left="12"/></padding>
+        <Button fx:id="btnInventory"         text="Inventory"          onAction="#onInventory"         maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnInbound"           text="Inbound"            onAction="#onInbound"           maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnOutbound"          text="Outbound"           onAction="#onOutbound"          maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnAttendance"        text="Attendance"         onAction="#onAttendance"        maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnEmployeeDirectory" text="Employee Directory" onAction="#onEmployeeDirectory" maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnLeaveRequests"     text="Leave Requests"     onAction="#onLeaveRequests"     maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnPayroll"           text="Payroll"            onAction="#onPayroll"           maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnForecasting"       text="Forecasting"        onAction="#onForecasting"       maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnReports"           text="Employee Reports"   onAction="#onReports"           maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnAdmin"             text="Admin"              onAction="#onAdmin"             maxWidth="Infinity" styleClass="sidebar-btn"/>
+        <Button fx:id="btnAuditLog"          text="Audit Log"          onAction="#onAuditLog"          maxWidth="Infinity" styleClass="sidebar-btn"/>
+    </VBox>
+    <Region VBox.vgrow="ALWAYS"/>
+    <Separator styleClass="sidebar-separator"/>
+    <VBox spacing="5">
+        <padding><Insets top="10" right="12" bottom="16" left="12"/></padding>
+        <Button text="Logout" onAction="#onLogout" maxWidth="Infinity" styleClass="sidebar-logout-btn"/>
+    </VBox>
 </VBox>

@@ -3,51 +3,71 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" styleClass="content-pane"
+<VBox spacing="18" styleClass="workspace"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.group100.wms.ui.reports.ReportCentreController">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <padding><Insets top="28" right="34" bottom="30" left="34"/></padding>
 
-    <Label text="Reports Centre — Employee Report" styleClass="page-title" style="-fx-font-size: 22; -fx-font-weight: bold;"/>
+    <HBox alignment="CENTER_LEFT" spacing="18" styleClass="module-header">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="REPORTS" styleClass="module-kicker"/>
+            <Label text="Employee Report Centre" styleClass="module-title"/>
+            <Label text="Workforce master data, employment status and payroll-ready records." styleClass="module-subtitle"/>
+        </VBox>
+        <Label text="Export ready" styleClass="module-chip"/>
+    </HBox>
 
-    <HBox spacing="15" alignment="CENTER_LEFT">
-        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
-            <Label text="Total Workers" styleClass="kpi-title"/>
-            <Label fx:id="lblTotal" text="--" styleClass="kpi-value"/>
+    <HBox spacing="14" alignment="CENTER_LEFT">
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="TOTAL WORKERS" styleClass="metric-label"/>
+            <Label fx:id="lblTotal" text="--" styleClass="metric-value"/>
         </VBox>
-        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
-            <Label text="Active" styleClass="kpi-title"/>
-            <Label fx:id="lblActive" text="--" styleClass="kpi-value" style="-fx-text-fill: #27ae60;"/>
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="ACTIVE" styleClass="metric-label"/>
+            <Label fx:id="lblActive" text="--" styleClass="metric-value-success"/>
         </VBox>
-        <VBox styleClass="kpi-card" spacing="4" alignment="CENTER" prefWidth="150">
-            <Label text="Resigned" styleClass="kpi-title"/>
-            <Label fx:id="lblResigned" text="--" styleClass="kpi-value" style="-fx-text-fill: #e74c3c;"/>
+        <VBox styleClass="metric-card" spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="RESIGNED" styleClass="metric-label"/>
+            <Label fx:id="lblResigned" text="--" styleClass="metric-value-danger"/>
         </VBox>
     </HBox>
 
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Section:"/>
-        <ComboBox fx:id="cmbSection" prefWidth="120"/>
-        <Label text="Status:"/>
-        <ComboBox fx:id="cmbActiveFilter" prefWidth="120"/>
-        <Button text="🔍 Filter" onAction="#handleFilter"/>
-        <Button text="↻ Reset" onAction="#handleReset"/>
+    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="filter-panel">
+        <VBox styleClass="field-group">
+            <Label text="Section" styleClass="field-label"/>
+            <ComboBox fx:id="cmbSection" prefWidth="150"/>
+        </VBox>
+        <VBox styleClass="field-group">
+            <Label text="Status" styleClass="field-label"/>
+            <ComboBox fx:id="cmbActiveFilter" prefWidth="150"/>
+        </VBox>
+        <Button text="Filter" onAction="#handleFilter" styleClass="btn-primary"/>
+        <Button text="Reset" onAction="#handleReset" styleClass="btn-outline"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="📥 PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
-        <Button text="📥 Excel" onAction="#handleExportExcel" styleClass="btn-success"/>
+        <Button text="Export PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
+        <Button text="Export Excel" onAction="#handleExportExcel" styleClass="btn-success"/>
     </HBox>
 
-    <TableView fx:id="empTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="40"/>
-            <TableColumn fx:id="colName" text="Full Name" prefWidth="170"/>
-            <TableColumn fx:id="colDesig" text="Designation" prefWidth="130"/>
-            <TableColumn fx:id="colSection" text="Section" prefWidth="65"/>
-            <TableColumn fx:id="colRate" text="Daily Rate" prefWidth="80"/>
-            <TableColumn fx:id="colBank" text="Bank" prefWidth="120"/>
-            <TableColumn fx:id="colBankAcc" text="Account No" prefWidth="110"/>
-            <TableColumn fx:id="colNic" text="NIC" prefWidth="110"/>
-            <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
-        </columns>
-    </TableView>
+    <VBox styleClass="table-shell" VBox.vgrow="ALWAYS">
+        <HBox styleClass="table-titlebar">
+            <VBox spacing="2">
+                <Label text="Employee Export View" styleClass="table-title"/>
+                <Label text="Section, daily rate, bank details, NIC and employee status." styleClass="table-caption"/>
+            </VBox>
+        </HBox>
+        <TableView fx:id="empTable" VBox.vgrow="ALWAYS">
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colName" text="Full Name" prefWidth="190"/>
+                <TableColumn fx:id="colDesig" text="Designation" prefWidth="150"/>
+                <TableColumn fx:id="colSection" text="Section" prefWidth="80"/>
+                <TableColumn fx:id="colRate" text="Daily Rate" prefWidth="95"/>
+                <TableColumn fx:id="colBank" text="Bank" prefWidth="130"/>
+                <TableColumn fx:id="colBankAcc" text="Account No" prefWidth="120"/>
+                <TableColumn fx:id="colNic" text="NIC" prefWidth="120"/>
+                <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </VBox>
 </VBox>
